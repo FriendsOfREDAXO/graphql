@@ -1,0 +1,15 @@
+{
+    "require": {
+        "thecodingmachine/graphqlite": "^6.0",
+        "yiisoft/cache": "^1.0",
+        "php-di/php-di": "^6.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Headless\\": [
+                "lib/",
+                "../project/lib/"
+            ]
+        }
+    }
+}
