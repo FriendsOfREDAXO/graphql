@@ -30,6 +30,7 @@ class GraphQL
         static::addCorsHeaders();
         \rex_response::cleanOutputBuffers();
         \rex_response::sendCacheControl();
+        \rex_response::setStatus(\rex_response::HTTP_OK);
         \rex_response::sendContent(json_encode($output), 'application/json');
         exit;
     }
