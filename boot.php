@@ -10,6 +10,6 @@ rex_extension::register('PACKAGES_INCLUDED', function (\rex_extension_point $ep)
 
 rex_extension::register('HEADLESS_GRAPHQL_CONTROLLERS', function (\rex_extension_point $ep) {
     $controllers = $ep->getSubject();
-    $controllers[] = \Headless\GraphQL\Controller\ArticlesController::class;
+    $controllers[] = \Headless\GraphQL\Controller\ArticleController::class;
     return $controllers;
 });

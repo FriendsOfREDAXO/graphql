@@ -1,6 +1,6 @@
 <?php
 
-namespace Headless\Model\Article;
+namespace Headless\Model\Structure;
 
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Types\ID;
@@ -39,6 +39,14 @@ class Article
     public function getUrl(): string
     {
         return $this->article->getUrl();
+    }
+
+    /**
+     * @Field()
+     */
+    public function isStartArticle(): bool
+    {
+        return $this->article->isStartArticle();
     }
 
     /**

@@ -1,23 +1,25 @@
 <?php
 
 namespace Headless\GraphQL\Controller;
-use Headless\Model\Article\Article;
-use lib\Services\Article\ArticlesService;
+use Headless\Model\Structure\Article;
+use lib\Services\Structure\ArticleService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 use TheCodingMachine\GraphQLite\Types\ID;
 
-class ArticlesController
+class ArticleController
 {
 
-    private ArticlesService $service;
+    private ArticleService $service;
 
     public function __construct()
     {
-        $this->service = new ArticlesService();
+        $this->service = new ArticleService();
     }
 
     /**
-     * @Query("Get all articles in the root category")
+     * Get all articles in the root category
+     *
+     * @Query()
      * @return Article[]
      */
     public function getRootArticles(): array
@@ -26,7 +28,8 @@ class ArticlesController
     }
 
     /**
-     * @Query("Get an article by its id")
+     * Get an article by its id
+     * @Query()
      * @param ID $id id of the article
      * @return Article
      */
@@ -36,17 +39,25 @@ class ArticlesController
     }
 
     /**
-     * @Query("Get an article by its path")
+     * Get an article by its path
+     * @Query()
      * @param string $path path of the article
      * @return Article
      */
     public function getArticleByPath(string $path): Article
     {
-        if (substr($path, 0, 1) !== '/')
-            $path = '/' . $path;
-        if (substr($path, -1) !== '/')
-            $path = $path . '/';
+
         return $this->service->getArticleByPath($path);
+    }
+
+    /**
+     * Get the start article of the site
+     * @Query()
+     * @return Article
+     */
+    public function getSiteStartArticle(): Article
+    {
+        return $this->service->getSiteStartArticle();
     }
 
 }
