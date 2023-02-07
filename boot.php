@@ -7,3 +7,9 @@ rex_extension::register('PACKAGES_INCLUDED', function (\rex_extension_point $ep)
         GraphQL::registerEndpoint();
     }
 });
+
+rex_extension::register('HEADLESS_GRAPHQL_CONTROLLERS', function (\rex_extension_point $ep) {
+    $controllers = $ep->getSubject();
+    $controllers[] = \Headless\GraphQL\Controller\ArticlesController::class;
+    return $controllers;
+});
