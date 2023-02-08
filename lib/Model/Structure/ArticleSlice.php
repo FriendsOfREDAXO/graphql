@@ -92,7 +92,7 @@ class ArticleSlice
      * @Field()
      * @return string
      */
-    public function getLinklist(): ?string
+    public function getLinkList(): ?string
     {
         return $this->parseValueObjects(function ($i) {
             return $this->slice->getLinkList($i);

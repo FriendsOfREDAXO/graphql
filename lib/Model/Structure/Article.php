@@ -50,6 +50,18 @@ class Article
     }
 
     /**
+     * @Field()
+     * @return ArticleSlice[]
+     */
+    public function getSlices(): array
+    {
+        $slices = \rex_article_slice::getSlicesForArticle($this->article->getId());
+        return array_map(function ($slice) {
+            return ArticleSlice::getByObject($slice);
+        }, $slices);
+    }
+
+    /**
      * @param int $id id of \rex_article
      * @return Article proxy object
      */
