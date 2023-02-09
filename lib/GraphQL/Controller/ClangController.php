@@ -4,6 +4,8 @@ namespace Headless\GraphQL\Controller;
 use Headless\Model\Structure\Clang;
 use Headless\Services\Structure\ClangService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
+use TheCodingMachine\GraphQLite\Types\ID;
+
 
 class ClangController
 {
@@ -16,12 +18,13 @@ class ClangController
     }
 
     /**
-     * Get all available languages
+     * Get all available languages for an article
+     *
      * @Query()
      * @return Clang[]
      */
-    public function getClangs(): array
+    public function getClangs(ID $articleId): array
     {
-        return $this->service->getClangs();
+        return $this->service->getClangs($articleId->val());
     }
 }
