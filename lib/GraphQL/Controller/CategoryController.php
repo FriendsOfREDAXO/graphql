@@ -2,7 +2,7 @@
 
 namespace Headless\GraphQL\Controller;
 use Headless\Model\Structure\Category;
-use lib\Services\Structure\CategoryService;
+use Headless\Services\Structure\CategoryService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 
 

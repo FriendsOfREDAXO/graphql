@@ -3,7 +3,7 @@
 namespace Headless\GraphQL\Controller;
 
 use Headless\Model\Structure\ArticleSlice;
-use lib\Services\Structure\ArticleSliceService;
+use Headless\Services\Structure\ArticleSliceService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 use TheCodingMachine\GraphQLite\Types\ID;
 

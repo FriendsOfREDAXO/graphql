@@ -2,7 +2,7 @@
 
 namespace Headless\GraphQL\Controller;
 use Headless\Model\Structure\Article;
-use lib\Services\Structure\ArticleService;
+use Headless\Services\Structure\ArticleService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 use TheCodingMachine\GraphQLite\Types\ID;
 

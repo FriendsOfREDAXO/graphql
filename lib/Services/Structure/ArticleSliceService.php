@@ -1,6 +1,6 @@
 <?php
 
-namespace lib\Services\Structure;
+namespace Headless\Services\Structure;
 
 use Headless\Model\Structure\ArticleSlice;
 
