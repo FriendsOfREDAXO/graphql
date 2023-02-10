@@ -14,5 +14,6 @@ rex_extension::register('HEADLESS_GRAPHQL_CONTROLLERS', function (\rex_extension
     $controllers[] = \Headless\GraphQL\Controller\CategoryController::class;
     $controllers[] = \Headless\GraphQL\Controller\ClangController::class;
     $controllers[] = \Headless\GraphQL\Controller\ArticleSliceController::class;
+    $controllers[] = \Headless\GraphQL\Controller\MediaController::class;
     return $controllers;
 });
