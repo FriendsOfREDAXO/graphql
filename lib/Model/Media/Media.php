@@ -35,7 +35,7 @@ class Media
 
     /**
      * @Field()
-     * @return float[]
+     * @return float[]|null
      */
     public function getFocusPoint(): ?array
     {
@@ -108,8 +108,14 @@ class Media
         $mediaType = urlencode($this->imageType);
         $baseUrl   = $this->getBaseUrl();
         $name      = urlencode($this->media->getFilename());
+        if($this->isSVG()) {
+            return $baseUrl . 'media/' . $name;
+        }
+        return $baseUrl . 'media/' . $mediaType . '/' . $name;
+    }
 
-        return "{$baseUrl}media/$mediaType/$name";
+    private function isSVG(): bool {
+        return $this->media->getExtension() === 'svg';
     }
 
     /**
@@ -171,7 +177,7 @@ class Media
         }
         $imgSize  = [];
         $filePath = \rex_path::media($this->media->getFileName());
-        if ($this->getExtension() == 'svg') {
+        if ($this->isSVG()) {
             $content = file_get_contents($filePath);
             if (preg_match('!\bviewBox="\b[\d\.]+\s[\d\.]+\s([\d\.]+)\s([\d\.]+)"!', $content, $matches)) {
                 $imgSize = [$matches[1], $matches[2]];
