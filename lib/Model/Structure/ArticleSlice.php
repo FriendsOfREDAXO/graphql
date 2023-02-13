@@ -42,9 +42,12 @@ class ArticleSlice
      */
     public function getValues(): ?string
     {
-        return $this->parseValueObjects(function ($i) {
+        $values = $this->parseValueObjects(function ($i) {
             return $this->slice->getValueArray($i);
         });
+        return \rex_extension::registerPoint(new \rex_extension_point('HEADLESS_SLICE_VALUES', $values, [
+            'slice' => $this->slice,
+        ])) ?: null;
     }
 
     /**
@@ -108,15 +111,15 @@ class ArticleSlice
     private function parseValueObjects(callable $callback, int $count = 20): ?string
     {
         $values = [];
-        $found = false;
+        $found  = false;
         for ($i = 1; $i <= $count; $i++) {
             $value = $callback($i);
             if ($value) {
                 $values[$i] = $value;
-                $found = true;
+                $found      = true;
             }
         }
-        if($found) {
+        if ($found) {
             return json_encode($values);
         }
         return null;
