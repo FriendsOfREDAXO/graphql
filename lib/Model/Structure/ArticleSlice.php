@@ -43,7 +43,7 @@ class ArticleSlice
     public function getValues(): ?string
     {
         $values = $this->parseValueObjects(function ($i) {
-            return $this->slice->getValueArray($i);
+            return $this->slice->getValueArray($i) ?: $this->slice->getValue($i);
         });
         return \rex_extension::registerPoint(new \rex_extension_point('HEADLESS_SLICE_VALUES', $values, [
             'slice' => $this->slice,
