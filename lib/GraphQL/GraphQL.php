@@ -31,7 +31,9 @@ class GraphQL
         \rex_response::cleanOutputBuffers();
         \rex_response::sendCacheControl();
         \rex_response::setStatus(\rex_response::HTTP_OK);
-        \rex_response::sendContent(json_encode($output), 'application/json');
+        $output = json_encode($output);
+        $output = \rex_extension::registerPoint(new \rex_extension_point('HEADLESS_OUTPUT_FILTER', $output));
+        \rex_response::sendContent($output, 'application/json');
         exit;
     }
 
