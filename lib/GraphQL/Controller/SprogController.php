@@ -18,7 +18,9 @@ class SprogController
     }
 
     /**
-     * @Query("All WildCards")
+     * Get all wildcards
+     *
+     * @Query()
      * @return WildCard[]
      */
     public function getWildCards(): array
