@@ -51,6 +51,22 @@ class Article
 
     /**
      * @Field()
+     */
+    public function isOnline(): bool
+    {
+        return $this->article->isOnline();
+    }
+
+    /**
+     * @Field()
+     */
+    public function getClang(): Clang
+    {
+        return Clang::getById($this->article->getClangId());
+    }
+
+    /**
+     * @Field()
      * @return ArticleSlice[]
      */
     public function getSlices(): array
