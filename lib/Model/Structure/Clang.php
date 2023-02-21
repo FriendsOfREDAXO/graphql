@@ -13,7 +13,7 @@ use TheCodingMachine\GraphQLite\Annotations\Field;
 class Clang
 {
     public bool $isActive = false;
-    public string $url;
+    public ?string $url = null;
 
     public \rex_clang $clang;
 
@@ -61,7 +61,7 @@ class Clang
     /**
      * @Field()
      */
-    public function getUrl(): string
+    public function getUrl(): ?string
     {
         return $this->url;
     }
