@@ -67,6 +67,31 @@ class Article
 
     /**
      * @Field()
+     */
+    public function getSeo(): Seo
+    {
+        return Seo::getByArticle($this->article);
+    }
+
+    /**
+     * @Field()
+     * @return Article[]
+     */
+    public function getBreadcrumb(): array
+    {
+        $breadcrumb = [];
+        $path = $this->article->getPathAsArray();
+        foreach ($path as $articleId) {
+            $article = \rex_article::get($articleId);
+            if ($article instanceof \rex_article) {
+                $breadcrumb[] = Article::getById($articleId);
+            }
+        }
+        return $breadcrumb;
+    }
+
+    /**
+     * @Field()
      * @return ArticleSlice[]
      */
     public function getSlices(): array
