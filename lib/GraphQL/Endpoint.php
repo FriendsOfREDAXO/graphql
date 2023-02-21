@@ -66,7 +66,8 @@ class Endpoint
         if (is_array($value)) {
             return $value;
         }
-        throw new \InvalidArgumentException('Error parsing GraphQL input: "' . $rawInput . '"');
+        return [];
+        // throw new \InvalidArgumentException('Error parsing GraphQL input: "' . $rawInput . '"');
     }
 
     private function setLanguage(): void
