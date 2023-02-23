@@ -21,5 +21,6 @@ rex_extension::register('HEADLESS_GRAPHQL_CONTROLLERS', function (\rex_extension
     $controllers[] = \Headless\GraphQL\Controller\ArticleSliceController::class;
     $controllers[] = \Headless\GraphQL\Controller\MediaController::class;
     $controllers[] = \Headless\GraphQL\Controller\SprogController::class;
+    $controllers[] = \Headless\GraphQL\Controller\NavigationController::class;
     return $controllers;
 });

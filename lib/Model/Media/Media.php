@@ -2,7 +2,6 @@
 
 namespace Headless\Model\Media;
 
-use Kreatif\MediaManager;
 use TheCodingMachine\GraphQLite\Types\ID;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Annotations\Type;
