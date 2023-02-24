@@ -2,6 +2,7 @@
 
 namespace Headless\Model\Structure;
 
+use _PHPStan_4dd92cd93\Nette\Neon\Exception;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Types\ID;
@@ -60,7 +61,7 @@ class Breadcrumb
             $breadcrumb[] = static::getByCategoryId($id);
         }
         $lastCategory = $article->getCategory();
-        if($article->isStartArticle() && $lastCategory->getName() === $article->getName()) {
+        if ($article->isStartArticle() && $lastCategory->getName() === $article->getName()) {
             return $breadcrumb;
         }
         $breadcrumb[] = static::getByArticle($article);
@@ -73,7 +74,7 @@ class Breadcrumb
         if ($article instanceof \rex_article) {
             return self::getByArticle($article);
         }
-        return null;
+        throw new \Exception("Article with id $articleId not found");
     }
 
     public static function getByCategoryId(int $categoryId): ?self
@@ -82,7 +83,7 @@ class Breadcrumb
         if ($category instanceof \rex_category) {
             return self::getByCategory($category);
         }
-        return null;
+        throw new \Exception("Category with id $categoryId not found");
     }
 
     public static function getByCategory(\rex_category $category): self

@@ -70,17 +70,19 @@ class Media
         }
 
         $srcset = \rex_media_srcset::getSrcSet($this->media->getFilename(), $this->imageType);
-        if(!$srcset) {
+        if (!$srcset) {
             return null;
         }
         return $this->rewriteUrl($srcset);
     }
 
-    private function rewriteUrl(?string $url): string {
+    private function rewriteUrl(?string $url): string
+    {
         return str_replace('./', \rex_yrewrite::getCurrentDomain()->getUrl(), $url);
     }
 
-    private function getBaseUrl(): string {
+    private function getBaseUrl(): string
+    {
         return \rex_yrewrite::getCurrentDomain()->getUrl();
     }
 
@@ -107,13 +109,14 @@ class Media
         $mediaType = urlencode($this->imageType);
         $baseUrl   = $this->getBaseUrl();
         $name      = urlencode($this->media->getFilename());
-        if($this->isSVG()) {
+        if ($this->isSVG()) {
             return $baseUrl . 'media/' . $name;
         }
         return $baseUrl . 'media/' . $mediaType . '/' . $name;
     }
 
-    private function isSVG(): bool {
+    private function isSVG(): bool
+    {
         return $this->media->getExtension() === 'svg';
     }
 
@@ -148,8 +151,12 @@ class Media
      */
     public static function getByName(string $name, string $imageType): Media
     {
-        $a            = new Media();
-        $a->media     = \rex_media::get($name);
+        $a     = new Media();
+        $media = \rex_media::get($name);
+        if (!$media) {
+            throw new \Exception("Media for name $name not found");
+        }
+        $a->media     = $media;
         $a->imageType = $imageType;
         return $a;
     }

@@ -7,6 +7,7 @@ use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Types\ID;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 
+
 /**
  * @Type()
  */
@@ -97,23 +98,29 @@ class Article
 
     /**
      * @param int $id id of \rex_article
+     *
      * @return Article proxy object
      */
     public static function getById(int $id): Article
     {
-        $a = new Article();
-        $a->article = \rex_article::get($id);
+        $a       = new Article();
+        $article = \rex_article::get($id);
+        if (!$article) {
+            throw new \Exception("Article with id $id not found");
+        }
+        $a->article = $article;
         return $a;
     }
 
 
     /**
      * @param \rex_article $obj \rex_article object to encapsulate
+     *
      * @return Article proxy object
      */
     public static function getByObject(\rex_article $obj): Article
     {
-        $a = new Article();
+        $a          = new Article();
         $a->article = $obj;
         return $a;
     }

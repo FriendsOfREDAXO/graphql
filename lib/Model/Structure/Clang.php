@@ -74,7 +74,11 @@ class Clang
     public static function getById(int $id): self
     {
         $clang        = new self();
-        $clang->clang = \rex_clang::get($id);
+        $lang        = \rex_clang::get($id);
+        if(!$lang) {
+            throw new \Exception("CLang with id $id not found");
+        }
+        $clang->clang = $lang;
         return $clang;
     }
 

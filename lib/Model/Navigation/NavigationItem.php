@@ -87,10 +87,11 @@ class NavigationItem
     public static function getByArticleId(int $id, int $currentId): ?self
     {
         $article = \rex_article::get($id);
+
         if ($article instanceof \rex_article) {
             return static::getByArticle($article, $currentId);
         }
-        return null;
+        throw new \Exception("Article with id $id not found");
     }
 
     public static function getByArticle(\rex_article $article, int $currentId): self

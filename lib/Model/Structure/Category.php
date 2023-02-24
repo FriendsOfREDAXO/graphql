@@ -80,8 +80,12 @@ class Category
      */
     public static function getById(int $id): Category
     {
-        $c           = new Category();
-        $c->category = \rex_category::get($id);
+        $c        = new Category();
+        $category = \rex_category::get($id);
+        if (!$category) {
+            throw new \Exception("Category with id $id not found");
+        }
+        $c->category = $category;
         return $c;
     }
 
