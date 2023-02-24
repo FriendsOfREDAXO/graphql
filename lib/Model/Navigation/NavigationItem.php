@@ -14,16 +14,31 @@ class NavigationItem
 {
 
     private int     $id;
-    private ?string $label;
-    private ?string $url;
+    private string $label;
+    private string $url;
     private ?int    $parentId;
+    private bool   $isActive;
 
-    public function __construct(int $id, ?string $label = null, ?string $url = null, ?int $parentId = null)
+    public function __construct(int $id, string $label, string $url, ?int $parentId, bool $isActive)
     {
         $this->id       = $id;
         $this->label    = $label;
         $this->url      = $url;
-        $this->parentId = $parentId;
+        $this->parentId = $parentId ?: null;
+        $this->isActive = $isActive;
+    }
+
+    public static function getByNavbuilderItem(array $item, ?int $parentId, int $articleId): self
+    {
+        $active = false;
+        if ($item['type'] === 'intern') {
+            $navItem = static::getByArticleId($item['id'], $articleId);
+            $url     = $navItem->getUrl();
+            $active  = $navItem->isActive();
+        } else {
+            $url = $item['url'];
+        }
+        return new self($item['id'], $item['name'], $url, $parentId, $active);
     }
 
 
@@ -40,7 +55,7 @@ class NavigationItem
     /**
      * @Field()
      */
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         return $this->label;
     }
@@ -48,7 +63,7 @@ class NavigationItem
     /**
      * @Field()
      */
-    public function getUrl(): ?string
+    public function getUrl(): string
     {
         return $this->url;
     }
@@ -61,26 +76,47 @@ class NavigationItem
         return $this->parentId;
     }
 
-    public static function getByArticle(\rex_article $article): self
+    /**
+     * @Field()
+     */
+    public function isActive(): bool
     {
-        $id       = $article->getId();
-        $label    = $article->getName();
-        $url      = $article->getUrl();
-        if($article->isStartArticle()) {
+        return $this->isActive;
+    }
+
+    public static function getByArticleId(int $id, int $currentId): ?self
+    {
+        $article = \rex_article::get($id);
+        if ($article instanceof \rex_article) {
+            return static::getByArticle($article, $currentId);
+        }
+        return null;
+    }
+
+    public static function getByArticle(\rex_article $article, int $currentId): self
+    {
+        $id    = $article->getId();
+        $label = $article->getName();
+        $url   = $article->getUrl();
+        if ($article->isStartArticle()) {
             $parentId = $article->getId();
         } else {
             $parentId = $article->getParentId() ?: null;
         }
-        return new self($id, $label, $url, $parentId);
+        $active = $id === $currentId;
+        return new self($id, $label, $url, $parentId, $active);
     }
 
-    public static function getByCategory(\rex_category $rootCategory): self
+    public static function getByCategory(\rex_category $rootCategory, int $currentId): self
     {
         $id       = $rootCategory->getId();
         $label    = $rootCategory->getName();
         $url      = $rootCategory->getUrl();
         $parentId = $rootCategory->getParentId() ?: null;
-        return new self($id, $label, $url, $parentId);
+        $currentArticle = \rex_article::get($currentId);
+        $path = explode('|', $currentArticle->getPath());
+        $active = in_array($id, $path);
+        return new self($id, $label, $url, $parentId, $active);
     }
 
 }

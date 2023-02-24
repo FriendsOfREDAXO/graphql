@@ -2,6 +2,7 @@
 
 namespace Headless\Model\Structure;
 
+use Headless\Model\Media\Media;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 
@@ -67,12 +68,12 @@ class Seo
     /**
      * @Field()
      */
-    public function getImage(): ?string
+    public function getImage(): ?Media
     {
         if ($this->seo) {
             $images = explode(',',$this->seo->getImages());
             if (count($images) > 0) {
-                return $images[0];
+                return Media::getByName($images[0], 'yrewrite_seo_image');
             }
         }
         return null;

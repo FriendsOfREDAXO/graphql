@@ -2,6 +2,7 @@
 
 namespace Headless\Model\Structure;
 
+use Headless\Model\Structure\Breadcrumb;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Types\ID;
 use TheCodingMachine\GraphQLite\Annotations\Type;
@@ -75,19 +76,11 @@ class Article
 
     /**
      * @Field()
-     * @return Article[]
+     * @return Breadcrumb[]
      */
-    public function getBreadcrumb(): array
+    public function getBreadcrumbs(): array
     {
-        $breadcrumb = [];
-        $path = $this->article->getPathAsArray();
-        foreach ($path as $articleId) {
-            $article = \rex_article::get($articleId);
-            if ($article instanceof \rex_article) {
-                $breadcrumb[] = Article::getById($articleId);
-            }
-        }
-        return $breadcrumb;
+        return Breadcrumb::getAllForArticle($this->article);
     }
 
     /**
