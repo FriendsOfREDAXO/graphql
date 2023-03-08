@@ -2,10 +2,10 @@
 
 namespace Headless\Model\Structure;
 
-use Headless\Model\Structure\Breadcrumb;
-use TheCodingMachine\GraphQLite\Annotations\Field;
+use Headless\Model\Structure\SEO\Seo;
 use TheCodingMachine\GraphQLite\Types\ID;
 use TheCodingMachine\GraphQLite\Annotations\Type;
+use TheCodingMachine\GraphQLite\Annotations\Field;
 
 
 /**
