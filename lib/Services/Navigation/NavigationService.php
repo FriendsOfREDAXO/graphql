@@ -56,7 +56,7 @@ class NavigationService
 
         if ($navItems) {
             foreach ($navItems as $navItem) {
-                $navigation = $this->parseNavbuilderItems($navItem, null, $articleId);
+                $navigation = array_merge($navigation, $this->parseNavbuilderItems($navItem, null, $articleId));
             }
         }
         return $navigation;

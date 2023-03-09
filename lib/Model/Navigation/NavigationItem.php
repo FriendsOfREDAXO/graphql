@@ -13,19 +13,21 @@ use TheCodingMachine\GraphQLite\Types\ID;
 class NavigationItem
 {
 
-    private int     $id;
+    private        $id;
     private string $label;
     private string $url;
-    private ?int    $parentId;
+    private ?int   $parentId;
     private bool   $isActive;
+    private bool   $internal;
 
-    public function __construct(int $id, string $label, string $url, ?int $parentId, bool $isActive)
+    public function __construct($id, string $label, string $url, ?int $parentId, bool $isActive, bool $internal)
     {
         $this->id       = $id;
         $this->label    = $label;
         $this->url      = $url;
         $this->parentId = $parentId ?: null;
         $this->isActive = $isActive;
+        $this->internal = $internal;
     }
 
     public static function getByNavbuilderItem(array $item, ?int $parentId, int $articleId): self
@@ -35,10 +37,12 @@ class NavigationItem
             $navItem = static::getByArticleId($item['id'], $articleId);
             $url     = $navItem->getUrl();
             $active  = $navItem->isActive();
+            $id      = $item['id'];
         } else {
-            $url = $item['url'];
+            $url = $item['href'];
+            $id  = uniqid();
         }
-        return new self($item['id'], $item['name'], $url, $parentId, $active);
+        return new self($id, $item['name'], $url, $parentId, $active, $item['type'] !== 'extern');
     }
 
 
@@ -84,6 +88,14 @@ class NavigationItem
         return $this->isActive;
     }
 
+    /**
+     * @Field()
+     */
+    public function isInternal(): bool
+    {
+        return $this->internal;
+    }
+
     public static function getByArticleId(int $id, int $currentId): ?self
     {
         $article = \rex_article::get($id);
@@ -105,19 +117,19 @@ class NavigationItem
             $parentId = $article->getParentId() ?: null;
         }
         $active = $id === $currentId;
-        return new self($id, $label, $url, $parentId, $active);
+        return new self($id, $label, $url, $parentId, $active, true);
     }
 
     public static function getByCategory(\rex_category $rootCategory, int $currentId): self
     {
-        $id       = $rootCategory->getId();
-        $label    = $rootCategory->getName();
-        $url      = $rootCategory->getUrl();
-        $parentId = $rootCategory->getParentId() ?: null;
+        $id             = $rootCategory->getId();
+        $label          = $rootCategory->getName();
+        $url            = $rootCategory->getUrl();
+        $parentId       = $rootCategory->getParentId() ?: null;
         $currentArticle = \rex_article::get($currentId);
-        $path = explode('|', $currentArticle->getPath());
-        $active = in_array($id, $path);
-        return new self($id, $label, $url, $parentId, $active);
+        $path           = explode('|', $currentArticle->getPath());
+        $active         = in_array($id, $path);
+        return new self($id, $label, $url, $parentId, $active, true);
     }
 
 }
