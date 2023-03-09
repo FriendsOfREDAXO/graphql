@@ -106,7 +106,7 @@ class NavigationItem
         throw new \Exception("Article with id $id not found");
     }
 
-    public static function getByArticle(\rex_article $article, int $currentId): self
+    public static function getByArticle(\rex_article $article, int $currentId): ?self
     {
         $id    = $article->getId();
         $label = $article->getName();
@@ -117,19 +117,27 @@ class NavigationItem
             $parentId = $article->getParentId() ?: null;
         }
         $active = $id === $currentId;
-        return new self($id, $label, $url, $parentId, $active, true);
+        $self = new self($id, $label, $url, $parentId, $active, true);
+        return \rex_extension::registerPoint(new \rex_extension_point('HEADLESS_PARSE_ARTICLE_NAVIGATION_ITEM', $self, [
+            'article' => $article,
+            'currentId' => $currentId,
+        ]));
     }
 
-    public static function getByCategory(\rex_category $rootCategory, int $currentId): self
+    public static function getByCategory(\rex_category $category, int $currentId): ?self
     {
-        $id             = $rootCategory->getId();
-        $label          = $rootCategory->getName();
-        $url            = $rootCategory->getUrl();
-        $parentId       = $rootCategory->getParentId() ?: null;
+        $id             = $category->getId();
+        $label          = $category->getName();
+        $url            = $category->getUrl();
+        $parentId       = $category->getParentId() ?: null;
         $currentArticle = \rex_article::get($currentId);
         $path           = explode('|', $currentArticle->getPath());
         $active         = in_array($id, $path);
-        return new self($id, $label, $url, $parentId, $active, true);
+        $self = new self($id, $label, $url, $parentId, $active, false);
+        return \rex_extension::registerPoint(new \rex_extension_point('HEADLESS_PARSE_CATEGORY_NAVIGATION_ITEM', $self, [
+            'category' => $category,
+            'currentId' => $currentId,
+        ]));
     }
 
 }
