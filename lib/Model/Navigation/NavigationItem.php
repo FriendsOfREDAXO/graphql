@@ -133,7 +133,7 @@ class NavigationItem
         $currentArticle = \rex_article::get($currentId);
         $path           = explode('|', $currentArticle->getPath());
         $active         = in_array($id, $path);
-        $self = new self($id, $label, $url, $parentId, $active, false);
+        $self = new self($id, $label, $url, $parentId, $active, true);
         return \rex_extension::registerPoint(new \rex_extension_point('HEADLESS_PARSE_CATEGORY_NAVIGATION_ITEM', $self, [
             'category' => $category,
             'currentId' => $currentId,
