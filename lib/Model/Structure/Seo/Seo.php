@@ -6,6 +6,7 @@ use Headless\Model\Media\Media;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 
+
 /**
  * @Type()
  */
@@ -71,15 +72,14 @@ class Seo
      */
     public function getAlternateLanguages(): array
     {
-        if ($this->seo) {
-            $hrefLangs = $this->seo->getHrefLangs();
-            $result = [];
-            foreach($hrefLangs as $code => $url) {
-                $result[] = new LangUrl($code, $url);
+        $lang_domains = [];
+        foreach(\rex_clang::getAll(true) as $clang) {
+            $article = \rex_article::get($this->article->getId(), $clang->getId());
+            if ($article->isOnline()) {
+                $lang_domains[] = new LangUrl($clang->getCode(), $article->getUrl());
             }
-            return $result;
         }
-        return [];
+        return $lang_domains;
     }
 
     /**
@@ -88,9 +88,28 @@ class Seo
     public function getImage(): ?Media
     {
         if ($this->seo) {
-            $images = explode(',',$this->seo->getImages());
+            $images = explode(',', $this->seo->getImages());
             if (count($images) > 0 && $images[0]) {
                 return Media::getByName($images[0], 'yrewrite_seo_image');
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @Field()
+     * @return Media[]
+     */
+    public function getImages(): ?array
+    {
+        if ($this->seo) {
+            $images = explode(',', $this->seo->getImages());
+            if (count($images) > 0) {
+                $media = [];
+                foreach ($images as $image) {
+                    $media[] = Media::getByName($image, 'og_share');
+                }
+                return $media;
             }
         }
         return null;

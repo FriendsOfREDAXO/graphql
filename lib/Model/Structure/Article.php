@@ -97,6 +97,24 @@ class Article
     }
 
     /**
+     * @Field()
+     * @return string
+     */
+    public function getCreateDate(): string
+    {
+        return date(\DateTimeInterface::ISO8601, $this->article->getCreateDate());
+    }
+
+    /**
+     * @Field()
+     * @return string
+     */
+    public function getUpdateDate(): string
+    {
+        return date(\DateTimeInterface::ISO8601, $this->article->getUpdateDate());
+    }
+
+    /**
      * @param int $id id of \rex_article
      *
      * @return Article proxy object
