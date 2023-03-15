@@ -107,7 +107,9 @@ class Seo
             if (count($images) > 0) {
                 $media = [];
                 foreach ($images as $image) {
-                    $media[] = Media::getByName($image, 'og_share');
+                    if($image) {
+                        $media[] = Media::getByName($image, 'og_share');
+                    }
                 }
                 return $media;
             }
