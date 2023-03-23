@@ -1,3 +1,11 @@
 package: headless
 author: Kreatif GmbH
 version: '0.0.1'
+
+page:
+    title: Headless
+    icon: rex-icon fa-wifi
+    perm: headless[]
+    subpages:
+        settings:
+            title: translate:settings

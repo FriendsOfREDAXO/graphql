@@ -73,10 +73,17 @@ class Seo
     public function getAlternateLanguages(): array
     {
         $lang_domains = [];
-        foreach(\rex_clang::getAll(true) as $clang) {
+        foreach (\rex_clang::getAll(true) as $clang) {
             $article = \rex_article::get($this->article->getId(), $clang->getId());
             if ($article->isOnline()) {
                 $lang_domains[] = new LangUrl($clang->getCode(), $article->getUrl());
+            }
+        }
+        $defaultLang = \rex_clang::get(\rex_clang::getStartId());
+        if ($defaultLang) {
+            $defaultLangArticle = \rex_article::get($this->article->getId(), $defaultLang->getId());
+            if ($defaultLangArticle && $defaultLangArticle->isOnline()) {
+                $lang_domains[] = new LangUrl('x-default', $defaultLangArticle->getUrl());
             }
         }
         return $lang_domains;
@@ -107,7 +114,7 @@ class Seo
             if (count($images) > 0) {
                 $media = [];
                 foreach ($images as $image) {
-                    if($image) {
+                    if ($image) {
                         $media[] = Media::getByName($image, 'og_share');
                     }
                 }
