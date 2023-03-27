@@ -3,7 +3,6 @@
 namespace Headless\GraphQL;
 
 use Headless\GraphQL\Controller\SprogController;
-use Headless\GraphQL\Controller\TestController;
 use TheCodingMachine\GraphQLite\AggregateControllerQueryProvider;
 use TheCodingMachine\GraphQLite\AggregateQueryProvider;
 use TheCodingMachine\GraphQLite\FactoryContext;
@@ -19,14 +18,23 @@ class RexQueryProvider implements QueryProviderInterface
     {
         $this->context = $context;
         $fieldsBuilder = $this->context->getFieldsBuilder();
-        $this->aggregateQueryProvider = new AggregateControllerQueryProvider(\rex_extension::registerPoint(
+        $classes = \rex_extension::registerPoint(
             new \rex_extension_point('HEADLESS_GRAPHQL_CONTROLLERS', [])
-        ),
+        );
+        $directories = \rex_extension::registerPoint(
+            new \rex_extension_point('HEADLESS_GRAPHQL_CONTROLLER_DIRECTORIES', [])
+        );
+
+        foreach ($directories as $directory) {
+            $classes = array_merge($classes, ClassParser::getClassesFromDirectory($directory));
+        }
+
+        $this->aggregateQueryProvider = new AggregateControllerQueryProvider(
+            $classes,
             $fieldsBuilder,
             $this->context->getContainer()
         );
     }
-
     public function getQueries(): array
     {
 

@@ -17,8 +17,8 @@ class Extensions
     public static function init()
     {
         \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext__initGraphQLEndpoint'], \rex_extension::LATE);
-        \rex_extension::register('HEADLESS_GRAPHQL_CONTROLLERS', [self::class, 'ext__initControllers']);
-        \rex_extension::register('HEADLESS_GRAPHQL_MODELS', [self::class, 'ext__initModels']);
+        \rex_extension::register('HEADLESS_GRAPHQL_MODEL_DIRECTORIES', [self::class, 'ext__initModelDirectories']);
+        \rex_extension::register('HEADLESS_GRAPHQL_CONTROLLER_DIRECTORIES', [self::class, 'ext__initControllerDirectories']);
 
     }
 
@@ -48,31 +48,16 @@ class Extensions
         }
     }
 
-    public static function ext__initControllers(\rex_extension_point $ep)
-    {
-        $controllers   = $ep->getSubject();
-        $controllers[] = \Headless\GraphQL\Controller\ArticleController::class;
-        $controllers[] = \Headless\GraphQL\Controller\CategoryController::class;
-        $controllers[] = \Headless\GraphQL\Controller\ClangController::class;
-        $controllers[] = \Headless\GraphQL\Controller\ArticleSliceController::class;
-        $controllers[] = \Headless\GraphQL\Controller\MediaController::class;
-        $controllers[] = \Headless\GraphQL\Controller\SprogController::class;
-        $controllers[] = \Headless\GraphQL\Controller\NavigationController::class;
-        return $controllers;
+
+    public static function ext__initModelDirectories(\rex_extension_point $ep) {
+        $directories = $ep->getSubject();
+        $directories[] = __DIR__ . '/Model';
+        return $directories;
     }
 
-    public static function ext__initModels(\rex_extension_point $ep) {
-        $models = $ep->getSubject();
-        $models[] = Article::class;
-        $models[] = \Headless\Model\Structure\Category::class;
-        $models[] = \Headless\Model\Structure\Clang::class;
-        $models[] = \Headless\Model\Media\Media::class;
-        $models[] = WildCard::class;
-        $models[] = Seo::class;
-        $models[] = ArticleSlice::class;
-        $models[] = Breadcrumb::class;
-        $models[] = LangUrl::class;
-        $models[] = NavigationItem::class;
-        return $models;
+    public static function ext__initControllerDirectories(\rex_extension_point $ep) {
+        $directories = $ep->getSubject();
+        $directories[] = __DIR__ . '/GraphQL/Controller';
+        return $directories;
     }
 }

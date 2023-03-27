@@ -36,6 +36,12 @@ class RexTypeMapper extends AbstractTypeMapper
         $classes = \rex_extension::registerPoint(
             new \rex_extension_point('HEADLESS_GRAPHQL_MODELS', [])
         );
+        $directories = \rex_extension::registerPoint(
+            new \rex_extension_point('HEADLESS_GRAPHQL_MODEL_DIRECTORIES', [])
+        );
+        foreach ($directories as $directory) {
+            $classes = array_merge($classes, ClassParser::getClassesFromDirectory($directory));
+        }
         $classList = [];
         foreach ($classes as $class) {
             $reflection = new \ReflectionClass($class);
@@ -43,4 +49,7 @@ class RexTypeMapper extends AbstractTypeMapper
         }
         return $classList;
     }
+
+
+
 }
