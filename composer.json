@@ -3,5 +3,8 @@
         "thecodingmachine/graphqlite": "^6.0",
         "yiisoft/cache": "^1.0",
         "php-di/php-di": "^6.4"
+    },
+    "scripts": {
+        "phpstan": "phpstan analyze"
     }
 }
