@@ -6,36 +6,21 @@ use DI\Container;
 use http\Exception\InvalidArgumentException;
 use TheCodingMachine\GraphQLite\Context\Context;
 use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;
+use TheCodingMachine\GraphQLite\Mappers\GlobTypeMapper;
 use TheCodingMachine\GraphQLite\Schema;
 use TheCodingMachine\GraphQLite\SchemaFactory;
+use TheCodingMachine\GraphQLite\TypeGenerator;
 use Yiisoft\Cache\ArrayCache;
 
 class Endpoint
 {
-    private Container $container;
     private SchemaFactory $schemaFactory;
 
     public function __construct()
     {
-        $this->container = new Container();
         $this->schemaFactory = new SchemaFactory(
-            new ArrayCache(), $this->container
+            new ArrayCache(), new Container()
         );
-    }
-
-    public function addControllerNamespace(string $namespace): void
-    {
-        $this->schemaFactory->addControllerNamespace($namespace);
-    }
-
-    public function addTypeNamespace(string $namespace): void
-    {
-        $this->schemaFactory->addTypeNamespace($namespace);
-    }
-
-    public function addController(string $controller): void
-    {
-        $this->container->set($controller, new $controller());
     }
 
 
@@ -56,6 +41,8 @@ class Endpoint
 
     private function generateSchema(): Schema
     {
+        $this->schemaFactory->addTypeMapperFactory(new RexTypeMapperFactory());
+        $this->schemaFactory->addQueryProviderFactory(new RexQueryProviderFactory());
         return $this->schemaFactory->createSchema();
     }
 

@@ -3,6 +3,13 @@
 namespace Headless;
 
 use Headless\GraphQL\GraphQL;
+use Headless\Model\Navigation\NavigationItem;
+use Headless\Model\Sprog\WildCard;
+use Headless\Model\Structure\Article;
+use Headless\Model\Structure\ArticleSlice;
+use Headless\Model\Structure\Breadcrumb;
+use Headless\Model\Structure\SEO\LangUrl;
+use Headless\Model\Structure\SEO\Seo;
 
 
 class Extensions
@@ -11,7 +18,8 @@ class Extensions
     {
         \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext__initGraphQLEndpoint'], \rex_extension::LATE);
         \rex_extension::register('HEADLESS_GRAPHQL_CONTROLLERS', [self::class, 'ext__initControllers']);
-        \rex_extension::register('STRUCTURE_CONTENT_NAV_RIGHT', [self::class, 'ext__interceptBackendArticleLink']);
+        \rex_extension::register('HEADLESS_GRAPHQL_MODELS', [self::class, 'ext__initModels']);
+
     }
 
     public static function ext__interceptBackendArticleLink(\rex_extension_point $ep)
@@ -51,5 +59,20 @@ class Extensions
         $controllers[] = \Headless\GraphQL\Controller\SprogController::class;
         $controllers[] = \Headless\GraphQL\Controller\NavigationController::class;
         return $controllers;
+    }
+
+    public static function ext__initModels(\rex_extension_point $ep) {
+        $models = $ep->getSubject();
+        $models[] = Article::class;
+        $models[] = \Headless\Model\Structure\Category::class;
+        $models[] = \Headless\Model\Structure\Clang::class;
+        $models[] = \Headless\Model\Media\Media::class;
+        $models[] = WildCard::class;
+        $models[] = Seo::class;
+        $models[] = ArticleSlice::class;
+        $models[] = Breadcrumb::class;
+        $models[] = LangUrl::class;
+        $models[] = NavigationItem::class;
+        return $models;
     }
 }
