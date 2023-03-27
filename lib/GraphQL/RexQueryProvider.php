@@ -13,26 +13,28 @@ class RexQueryProvider implements QueryProviderInterface
 {
 
     private FactoryContext $context;
+    private AggregateControllerQueryProvider $aggregateQueryProvider;
 
     public function __construct(FactoryContext $context)
     {
         $this->context = $context;
-    }
-
-    public function getQueries(): array
-    {
         $fieldsBuilder = $this->context->getFieldsBuilder();
-        $provider = new AggregateControllerQueryProvider(\rex_extension::registerPoint(
+        $this->aggregateQueryProvider = new AggregateControllerQueryProvider(\rex_extension::registerPoint(
             new \rex_extension_point('HEADLESS_GRAPHQL_CONTROLLERS', [])
         ),
             $fieldsBuilder,
             $this->context->getContainer()
         );
-        return $provider->getQueries();
+    }
+
+    public function getQueries(): array
+    {
+
+        return $this->aggregateQueryProvider->getQueries();
     }
 
     public function getMutations(): array
     {
-        return [];
+        return $this->aggregateQueryProvider->getMutations();
     }
 }
