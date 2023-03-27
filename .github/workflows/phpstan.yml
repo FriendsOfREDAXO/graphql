@@ -28,6 +28,6 @@ jobs:
           coverage: none
 
       - run: composer require redaxo/source ^5.14
-      - run: composer require phpstan/phpstan
+      - run: composer require phpstan/phpstan ^1.10.8
 
       - run: composer phpstan
