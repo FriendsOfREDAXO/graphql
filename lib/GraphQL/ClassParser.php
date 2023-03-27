@@ -16,7 +16,9 @@ class ClassParser
             $namespace = $matches[1];
             \preg_match('/class\s+(.+?)\s+/', $contents, $matches);
             $class = $matches[1];
-            $classes[] = $namespace . '\\' . $class;
+            if($class) {
+                $classes[] = $namespace . '\\' . $class;
+            }
         }
         return $classes;
     }
