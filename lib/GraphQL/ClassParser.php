@@ -15,6 +15,10 @@ class ClassParser
         $files->recursive(true);
         foreach ($files as $file) {
             $contents = file_get_contents($file->getPathname());
+            if ($contents === false) {
+                continue;
+            }
+
             \preg_match('/namespace\s+(.+?);/', $contents, $matches);
             $namespace = $matches[1];
             \preg_match('/class\s+(.+?)\s+/', $contents, $matches);
