@@ -17,6 +17,7 @@ use TheCodingMachine\GraphQLite\Types\ResolvableMutableInputInterface;
 class RexTypeMapper extends AbstractTypeMapper
 {
     private FactoryContext $context;
+
     public function __construct(FactoryContext $context)
     {
         parent::__construct(
@@ -31,6 +32,7 @@ class RexTypeMapper extends AbstractTypeMapper
             $context->getCache());
         $this->context = $context;
     }
+
     protected function getClassList(): array
     {
         $classes = \rex_extension::registerPoint(

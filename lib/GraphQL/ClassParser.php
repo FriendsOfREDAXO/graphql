@@ -5,6 +5,9 @@ namespace Headless\GraphQL;
 class ClassParser
 {
 
+    /**
+     * @return iterable<string>
+     */
     public static function getClassesFromDirectory(string $directory): array
     {
         $classes = [];

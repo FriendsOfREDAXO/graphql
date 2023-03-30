@@ -2,6 +2,7 @@
 
 namespace Headless\GraphQL;
 
+use GraphQL\Type\Definition\FieldDefinition;
 use Headless\GraphQL\Controller\SprogController;
 use TheCodingMachine\GraphQLite\AggregateControllerQueryProvider;
 use TheCodingMachine\GraphQLite\AggregateQueryProvider;
@@ -35,12 +36,19 @@ class RexQueryProvider implements QueryProviderInterface
             $this->context->getContainer()
         );
     }
+
+    /**
+     * @return FieldDefinition[]
+     */
     public function getQueries(): array
     {
 
         return $this->aggregateQueryProvider->getQueries();
     }
 
+    /**
+     * @return FieldDefinition[]
+     */
     public function getMutations(): array
     {
         return $this->aggregateQueryProvider->getMutations();
