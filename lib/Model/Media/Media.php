@@ -175,7 +175,9 @@ class Media
         return $a;
     }
 
-
+    /**
+     * @return array{width: numeric, height: numeric}
+     */
     private function getDimensions(): array
     {
         if ($this->dimensions) {
