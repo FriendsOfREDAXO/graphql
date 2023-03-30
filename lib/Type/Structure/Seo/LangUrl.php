@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Type\Structure\SEO;
+namespace GraphQL\Type\Structure\Seo;
 
 use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Annotations\Field;

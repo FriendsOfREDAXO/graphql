@@ -6,24 +6,19 @@ use TheCodingMachine\GraphQLite\Types\ID;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 
-
 #[Type]
 class ArticleSlice
 {
 
     public \rex_article_slice $slice;
 
-
-    /**
-     * @Field()
-     * @return ID
-     */
+    #[Field]
     public function getId(): ID
     {
         return new ID($this->slice->getId());
     }
 
-#[Field]
+    #[Field]
     public function getModuleCode(): ?string
     {
         $module = new \rex_module($this->slice->getModuleId());
@@ -32,26 +27,24 @@ class ArticleSlice
 
     /**
      * Values as JSON-Object
-     *
-     * @Field()
-     * @return string
      */
+    #[Field]
     public function getValues(): ?string
     {
         $values = $this->parseValueObjects(function ($i) {
             return $this->slice->getValueArray($i) ?: $this->slice->getValue($i);
         });
-        return \rex_extension::registerPoint(new \rex_extension_point('HEADLESS_SLICE_VALUES', $values, [
-            'slice' => $this->slice,
-        ])) ?: null;
+        return \rex_extension::registerPoint(
+            new \rex_extension_point('HEADLESS_SLICE_VALUES', $values, [
+                'slice' => $this->slice,
+            ])
+        ) ?: null;
     }
 
     /**
      * Media as JSON-Object
-     *
-     * @Field()
-     * @return string
      */
+    #[Field]
     public function getMedia(): ?string
     {
         return $this->parseValueObjects(function ($i) {
@@ -62,9 +55,8 @@ class ArticleSlice
     /**
      * Medialist as JSON-Object
      *
-     * @Field()
-     * @return string
      */
+    #[Field]
     public function getMediaList(): ?string
     {
         return $this->parseValueObjects(function ($i) {
@@ -74,10 +66,8 @@ class ArticleSlice
 
     /**
      * Link as JSON-Object
-     *
-     * @Field()
-     * @return string
      */
+    #[Field]
     public function getLink(): ?string
     {
         return $this->parseValueObjects(function ($i) {
@@ -87,10 +77,8 @@ class ArticleSlice
 
     /**
      * Linklist as JSON-Object
-     *
-     * @Field()
-     * @return string
      */
+    #[Field]
     public function getLinkList(): ?string
     {
         return $this->parseValueObjects(function ($i) {
@@ -100,19 +88,17 @@ class ArticleSlice
 
     /**
      * @param callable $callback function to get value
-     * @param int      $max      max number of values
-     *
-     * @return string
+     * @param int      $count      max number of values
      */
     private function parseValueObjects(callable $callback, int $count = 20): ?string
     {
         $values = [];
-        $found  = false;
+        $found = false;
         for ($i = 1; $i <= $count; $i++) {
             $value = $callback($i);
             if ($value) {
                 $values[$i] = $value;
-                $found      = true;
+                $found = true;
             }
         }
         if ($found) {
@@ -121,7 +107,6 @@ class ArticleSlice
         return null;
     }
 
-
     /**
      * @param int $id id of \rex_article_slice
      *
@@ -129,7 +114,7 @@ class ArticleSlice
      */
     public static function getById(int $id): ArticleSlice
     {
-        $s        = new ArticleSlice();
+        $s = new ArticleSlice();
         $s->slice = \rex_article_slice::getArticleSliceById($id);
         return $s;
     }
@@ -141,7 +126,7 @@ class ArticleSlice
      */
     public static function getByObject(\rex_article_slice $obj): ArticleSlice
     {
-        $s        = new ArticleSlice();
+        $s = new ArticleSlice();
         $s->slice = $obj;
         return $s;
     }

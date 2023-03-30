@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Type\Structure\SEO;
+namespace GraphQL\Type\Structure\Seo;
 
 use GraphQL\Type\Media\Media;
 use TheCodingMachine\GraphQLite\Annotations\Type;
@@ -92,7 +92,7 @@ class Seo
     }
 
     /**
-     * @return Media[]
+     * @return Media[]|null
      */
     #[Field]
     public function getImages(): ?array

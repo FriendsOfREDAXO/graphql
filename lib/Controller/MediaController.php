@@ -19,10 +19,8 @@ class MediaController
 
     /**
      * Get a media by name and image type
-     *
-     * @Query()
-     * @return Media
      */
+    #[Query]
     public function getMedia(string $name, string $imageType): Media
     {
         return $this->service->getMediaByName($name, $imageType);

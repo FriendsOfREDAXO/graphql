@@ -2,7 +2,7 @@
 
 namespace GraphQL\Type\Structure;
 
-use GraphQL\Type\Structure\SEO\Seo;
+use GraphQL\Type\Structure\Seo\Seo;
 use TheCodingMachine\GraphQLite\Types\ID;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Annotations\Field;

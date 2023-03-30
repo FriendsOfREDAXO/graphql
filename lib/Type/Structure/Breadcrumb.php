@@ -2,7 +2,6 @@
 
 namespace GraphQL\Type\Structure;
 
-use _PHPStan_4dd92cd93\Nette\Neon\Exception;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Types\ID;
