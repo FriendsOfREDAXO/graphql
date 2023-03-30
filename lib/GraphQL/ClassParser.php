@@ -6,7 +6,7 @@ class ClassParser
 {
 
     /**
-     * @return iterable<string>
+     * @return string[]
      */
     public static function getClassesFromDirectory(string $directory): array
     {
