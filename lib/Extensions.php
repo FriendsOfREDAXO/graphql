@@ -1,25 +1,13 @@
 <?php
 
-namespace Headless;
-
-use Headless\GraphQL\GraphQL;
-use Headless\Model\Navigation\NavigationItem;
-use Headless\Model\Sprog\WildCard;
-use Headless\Model\Structure\Article;
-use Headless\Model\Structure\ArticleSlice;
-use Headless\Model\Structure\Breadcrumb;
-use Headless\Model\Structure\SEO\LangUrl;
-use Headless\Model\Structure\SEO\Seo;
-
+namespace GraphQL;
 
 class Extensions
 {
     public static function init()
     {
         \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext__initGraphQLEndpoint'], \rex_extension::LATE);
-        \rex_extension::register('HEADLESS_GRAPHQL_MODEL_DIRECTORIES', [self::class, 'ext__initModelDirectories']);
-        \rex_extension::register('HEADLESS_GRAPHQL_CONTROLLER_DIRECTORIES', [self::class, 'ext__initControllerDirectories']);
-
+        \rex_extension::register('STRUCTURE_CONTENT_NAV_RIGHT', [self::class, 'ext__interceptBackendArticleLink']);
     }
 
     public static function ext__interceptBackendArticleLink(\rex_extension_point $ep)
@@ -44,20 +32,7 @@ class Extensions
             if ($clangId) {
                 \rex_clang::setCurrentId($clangId);
             }
-            GraphQL::registerEndpoint();
+            Endpoint::registerEndpoint();
         }
-    }
-
-
-    public static function ext__initModelDirectories(\rex_extension_point $ep) {
-        $directories = $ep->getSubject();
-        $directories[] = __DIR__ . '/Model';
-        return $directories;
-    }
-
-    public static function ext__initControllerDirectories(\rex_extension_point $ep) {
-        $directories = $ep->getSubject();
-        $directories[] = __DIR__ . '/GraphQL/Controller';
-        return $directories;
     }
 }

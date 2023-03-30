@@ -1,6 +1,8 @@
 <?php
 
-Headless\Extensions::init();
+use GraphQL\Extensions;
+
+Extensions::init();
 
 
 
