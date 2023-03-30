@@ -7,6 +7,9 @@ use Headless\Model\Sprog\WildCard;
 class WildCardService
 {
 
+    /**
+     * @return WildCard[]
+     */
     public function getAllWildCards(): array
     {
         $data = \rex_sql::factory()->getArray('SELECT * FROM ' . \rex::getTablePrefix() . 'sprog_wildcard WHERE clang_id = :clangId', [

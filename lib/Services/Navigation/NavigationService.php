@@ -76,6 +76,11 @@ class NavigationService
         return $navigation;
     }
 
+    /**
+     * @param NavigationItem[]    $navItem
+     *
+     * @return NavigationItem[]
+     */
     public function parseNavbuilderItems(array $navItem, ?int $parentId, int $articleId): array
     {
         $navigation   = [];

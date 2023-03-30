@@ -9,7 +9,6 @@ class ArticleSliceService
 {
     /**
      * Get slice by id
-     * @param int $id
      *
      * @return ArticleSlice
      */
@@ -20,9 +19,8 @@ class ArticleSliceService
 
     /**
      * Get all slices of an article
-     * @param int $articleId
      *
-     * @return array
+     * @return ArticleSlice[]
      */
     public function getSlicesByArticleId(int $articleId): array
     {

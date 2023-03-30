@@ -24,6 +24,9 @@ class ArticleService
         return Article::getById($id);
     }
 
+    /**
+     * @return Article[]
+     */
     public function getRootArticles(): array
     {
         $articles = \rex_article::getRootArticles();
