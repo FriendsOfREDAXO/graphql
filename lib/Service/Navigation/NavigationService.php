@@ -1,6 +1,6 @@
 <?php
 
-namespace Kreatif\Services\Navigation;
+namespace GraphQL\Service\Navigation;
 
 use GraphQL\Type\Navigation\NavigationItem;
 

@@ -3,6 +3,8 @@
 namespace GraphQL;
 
 use DI\Container;
+use GraphQL\TypeMapper\RexQueryProviderFactory;
+use GraphQL\TypeMapper\RexTypeMapperFactory;
 use TheCodingMachine\GraphQLite\Context\Context;
 use TheCodingMachine\GraphQLite\Schema;
 use TheCodingMachine\GraphQLite\SchemaFactory;
@@ -74,7 +76,7 @@ class Endpoint
         \rex_response::setHeader('Access-Control-Allow-Origin', '*');
         \rex_response::setHeader('Access-Control-Allow-Headers', 'Content-Type');
         $output = json_encode($output);
-        $output = \rex_extension::registerPoint(new \rex_extension_point('HEADLESS_OUTPUT_FILTER', $output));
+        $output = \rex_extension::registerPoint(new \rex_extension_point('GRAPHQL_OUTPUT_FILTER', $output));
         \rex_response::sendContent($output, 'application/json');
         exit;
     }
@@ -82,7 +84,7 @@ class Endpoint
     private static function isDebug(): bool
     {
         return \rex_extension::registerPoint(
-            new \rex_extension_point('HEADLESS_GRAPHQL_DEBUG', \rex::isDebugMode())
+            new \rex_extension_point('GRAPHQL_DEBUG', \rex::isDebugMode())
         );
     }
 }

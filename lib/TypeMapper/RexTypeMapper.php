@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace GraphQL\TypeMapper;
 
 use TheCodingMachine\GraphQLite\FactoryContext;
 use TheCodingMachine\GraphQLite\InputTypeUtils;
@@ -12,7 +12,7 @@ class RexTypeMapper extends AbstractTypeMapper
     public function __construct(FactoryContext $context)
     {
         parent::__construct(
-            'Headless_Model',
+            'GraphQL\\Type',
             $context->getTypeGenerator(),
             $context->getInputTypeGenerator(),
             new InputTypeUtils($context->getAnnotationReader(), $context->getNamingStrategy()),

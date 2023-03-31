@@ -4,7 +4,6 @@ namespace GraphQL\Service\Structure;
 
 use GraphQL\Type\Structure\Category;
 
-
 class CategoryService
 {
 
@@ -16,7 +15,7 @@ class CategoryService
     public function getRootCategories(): array
     {
         $categories = \rex_category::getRootCategories(1);
-        return array_map(function($category) {
+        return array_map(function ($category) {
             return Category::getByObject($category);
         }, $categories);
     }

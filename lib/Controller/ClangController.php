@@ -1,11 +1,11 @@
 <?php
 
 namespace GraphQL\Controller;
+
 use GraphQL\Type\Structure\Clang;
 use GraphQL\Service\Structure\ClangService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 use TheCodingMachine\GraphQLite\Types\ID;
-
 
 class ClangController
 {

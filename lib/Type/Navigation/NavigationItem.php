@@ -101,7 +101,7 @@ class NavigationItem
         $active = $id === $currentId;
         $self = new self($id, $label, $url, $parentId, $active, true);
         return \rex_extension::registerPoint(
-            new \rex_extension_point('HEADLESS_PARSE_ARTICLE_NAVIGATION_ITEM', $self, [
+            new \rex_extension_point('GRAPHQL_PARSE_ARTICLE_NAVIGATION_ITEM', $self, [
                 'article' => $article,
                 'currentId' => $currentId,
             ])
@@ -119,7 +119,7 @@ class NavigationItem
         $active = in_array($id, $path);
         $self = new self($id, $label, $url, $parentId, $active, true);
         return \rex_extension::registerPoint(
-            new \rex_extension_point('HEADLESS_PARSE_CATEGORY_NAVIGATION_ITEM', $self, [
+            new \rex_extension_point('GRAPHQL_PARSE_CATEGORY_NAVIGATION_ITEM', $self, [
                 'category' => $category,
                 'currentId' => $currentId,
             ])

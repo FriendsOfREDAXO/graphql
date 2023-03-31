@@ -4,11 +4,11 @@ namespace GraphQL\Service\Structure;
 
 use GraphQL\Type\Structure\ArticleSlice;
 
-
 class ArticleSliceService
 {
     /**
      * Get slice by id
+     *
      * @param int $id
      *
      * @return ArticleSlice
@@ -20,6 +20,7 @@ class ArticleSliceService
 
     /**
      * Get all slices of an article
+     *
      * @param int $articleId
      *
      * @return array
@@ -27,7 +28,7 @@ class ArticleSliceService
     public function getSlicesByArticleId(int $articleId): array
     {
         $slices = \rex_article_slice::getSlicesForArticle($articleId);
-        return array_map(function($slice) {
+        return array_map(function ($slice) {
             return ArticleSlice::getByObject($slice);
         }, $slices);
     }

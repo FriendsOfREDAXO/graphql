@@ -1,11 +1,11 @@
 <?php
 
 namespace GraphQL\Controller;
+
+use GraphQL\Service\Navigation\NavigationService;
 use GraphQL\Type\Navigation\NavigationItem;
-use Kreatif\Services\Navigation\NavigationService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 use TheCodingMachine\GraphQLite\Types\ID;
-
 
 class NavigationController
 {
@@ -37,7 +37,5 @@ class NavigationController
     {
         return $this->service->getNavigationByName($name, $articleId->val());
     }
-
-
 
 }

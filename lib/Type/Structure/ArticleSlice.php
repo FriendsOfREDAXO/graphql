@@ -35,7 +35,7 @@ class ArticleSlice
             return $this->slice->getValueArray($i) ?: $this->slice->getValue($i);
         });
         return \rex_extension::registerPoint(
-            new \rex_extension_point('HEADLESS_SLICE_VALUES', $values, [
+            new \rex_extension_point('GRAPHQL_SLICE_VALUES', $values, [
                 'slice' => $this->slice,
             ])
         ) ?: null;
@@ -88,7 +88,7 @@ class ArticleSlice
 
     /**
      * @param callable $callback function to get value
-     * @param int      $count      max number of values
+     * @param int      $count    max number of values
      */
     private function parseValueObjects(callable $callback, int $count = 20): ?string
     {

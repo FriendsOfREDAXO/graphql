@@ -6,7 +6,6 @@ use GraphQL\Type\Sprog\WildCard;
 use GraphQL\Service\Sprog\WildCardService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 
-
 class SprogController
 {
 
@@ -27,7 +26,5 @@ class SprogController
     {
         return $this->wildCardService->getAllWildCards();
     }
-
-
 
 }

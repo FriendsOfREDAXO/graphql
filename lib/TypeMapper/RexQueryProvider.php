@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace GraphQL\TypeMapper;
 
 use TheCodingMachine\GraphQLite\AggregateControllerQueryProvider;
 use TheCodingMachine\GraphQLite\FactoryContext;

@@ -4,21 +4,25 @@ namespace GraphQL\Service\Structure;
 
 use GraphQL\Type\Structure\Article;
 
-
 class ArticleService
 {
 
     public function getArticleByPath(string $path): Article
     {
         if (substr($path, 0, 1) !== '/') {
-            $path = '/' . $path;
+            $path = '/'.$path;
         }
         if (substr($path, -1) !== '/') {
-            $path = $path . '/';
+            $path = $path.'/';
         }
         $structureAddon = \rex_addon::get('structure');
-        $resolver       = new \rex_yrewrite_path_resolver(\rex_yrewrite::getDomains(), [], [], \rex_yrewrite::$paths['paths'] ?? [],
-            \rex_yrewrite::$paths['redirections'] ?? []);
+        $resolver = new \rex_yrewrite_path_resolver(
+            \rex_yrewrite::getDomains(),
+            [],
+            [],
+            \rex_yrewrite::$paths['paths'] ?? [],
+            \rex_yrewrite::$paths['redirections'] ?? []
+        );
         $resolver->resolve($path);
         $id = $structureAddon->getProperty('article_id');
         return Article::getById($id);

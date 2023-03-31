@@ -7,7 +7,6 @@ use GraphQL\Service\Structure\ArticleSliceService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 use TheCodingMachine\GraphQLite\Types\ID;
 
-
 class ArticleSliceController
 {
     private ArticleSliceService $service;
@@ -37,7 +36,5 @@ class ArticleSliceController
     {
         return $this->service->getSliceById($articleSliceId->val());
     }
-
-
 
 }

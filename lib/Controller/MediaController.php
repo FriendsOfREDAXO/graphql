@@ -6,7 +6,6 @@ use GraphQL\Type\Media\Media;
 use GraphQL\Service\Media\MediaService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 
-
 class MediaController
 {
 
@@ -25,6 +24,5 @@ class MediaController
     {
         return $this->service->getMediaByName($name, $imageType);
     }
-
 
 }
