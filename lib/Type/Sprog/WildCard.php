@@ -2,7 +2,7 @@
 
 namespace GraphQL\Type\Sprog;
 
-use Headless\Model\Structure\Clang;
+use GraphQL\Type\Structure\Clang;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Types\ID;

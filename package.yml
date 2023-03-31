@@ -3,9 +3,14 @@ author: Kreatif GmbH
 version: '0.0.1'
 
 page:
-    title: Headless
+    title: Headless Frontend
     icon: rex-icon fa-wifi
     perm: headless[]
     subpages:
         settings:
             title: translate:settings
+
+requires:
+    php:
+        version: '>=8.1, <8.3'
+    redaxo: '^5.14'
