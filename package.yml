@@ -13,4 +13,6 @@ page:
 requires:
     php:
         version: '>=8.1, <8.3'
-    redaxo: '^5.14'
+    redaxo: '>=5.14'
+    packages:
+        yrewrite: '>=2.9'

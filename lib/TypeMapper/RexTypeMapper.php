@@ -12,7 +12,7 @@ class RexTypeMapper extends AbstractTypeMapper
     public function __construct(FactoryContext $context)
     {
         parent::__construct(
-            'GraphQL\\Type',
+            'GraphQL_Type',
             $context->getTypeGenerator(),
             $context->getInputTypeGenerator(),
             new InputTypeUtils($context->getAnnotationReader(), $context->getNamingStrategy()),

@@ -13,7 +13,7 @@ class Extensions
     public static function ext__interceptBackendArticleLink(\rex_extension_point $ep)
     {
         $content     = $ep->getSubject();
-        $frontendUrl = trim(\rex_addon::get('headless')->getConfig('frontend_base_url'), '/');
+        $frontendUrl = trim(\rex_addon::get('graphql')->getConfig('frontend_base_url'), '/');
         if($frontendUrl) {
             $articleId   = $ep->getParam('article_id');
             $clang       = $ep->getParam('clang');
@@ -27,7 +27,7 @@ class Extensions
 
     public static function ext__initGraphQLEndpoint()
     {
-        if (rex_request('headless-graphql', 'string', null) !== null) {
+        if (rex_request('graphql-api', 'string', null) !== null) {
             $clangId = rex_request('clang-id', 'int', null);
             if ($clangId) {
                 \rex_clang::setCurrentId($clangId);

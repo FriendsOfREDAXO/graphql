@@ -23,7 +23,6 @@ class Endpoint
 
     public function executeQuery(): \GraphQL\Executor\ExecutionResult
     {
-        $this->setLanguage();
         $input = $this->readInput();
         $schema = $this->generateSchema();
 
@@ -51,12 +50,6 @@ class Endpoint
             return $value;
         }
         return [];
-    }
-
-    private function setLanguage(): void
-    {
-        $clangId = rex_get('clangId', 'int', \rex_clang::getCurrentId());
-        \rex_clang::setCurrentId($clangId);
     }
 
     public static function registerEndpoint(): void

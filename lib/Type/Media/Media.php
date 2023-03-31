@@ -10,7 +10,7 @@ use TheCodingMachine\GraphQLite\Annotations\Type;
 class Media
 {
     public \rex_media $media;
-    public string $imageType;
+    public string $mediaType;
     private array $dimensions = [];
 
     #[Field]
@@ -58,7 +58,7 @@ class Media
             return null;
         }
 
-        $srcset = \rex_media_srcset::getSrcSet($this->media->getFilename(), $this->imageType);
+        $srcset = \rex_media_srcset::getSrcSet($this->media->getFilename(), $this->mediaType);
         if (!$srcset) {
             return null;
         }
@@ -91,7 +91,7 @@ class Media
     #[Field]
     public function getSrc(): string
     {
-        $mediaType = urlencode($this->imageType);
+        $mediaType = urlencode($this->mediaType);
         $baseUrl = $this->getBaseUrl();
         $name = urlencode($this->media->getFilename());
         if ($this->isSVG()) {
@@ -128,7 +128,7 @@ class Media
      *
      * @return Media proxy object
      */
-    public static function getByName(string $name, string $imageType): Media
+    public static function getByName(string $name, string $mediaType): Media
     {
         $a = new Media();
         $media = \rex_media::get($name);
@@ -136,7 +136,7 @@ class Media
             throw new \Exception("Media for name $name not found");
         }
         $a->media = $media;
-        $a->imageType = $imageType;
+        $a->mediaType = $mediaType;
         return $a;
     }
 
@@ -145,11 +145,11 @@ class Media
      *
      * @return Media proxy object
      */
-    public static function getByObject(\rex_media $obj, string $imageType): Media
+    public static function getByObject(\rex_media $obj, string $mediaType): Media
     {
         $a = new Media();
         $a->media = $obj;
-        $a->imageType = $imageType;
+        $a->mediaType = $mediaType;
         return $a;
     }
 
@@ -169,13 +169,13 @@ class Media
                     $imgSize = [$widthMatches[1], $heightMatches[1]];
                 }
             }
-        } elseif ($this->imageType) {
-            $mediaManager = \rex_media_manager::create($this->imageType, $this->media->getFileName());
+        } elseif ($this->mediaType) {
+            $mediaManager = \rex_media_manager::create($this->mediaType, $this->media->getFileName());
 
             if (version_compare(\rex_addon::get('media_manager')->getVersion(), '2.11.0', '>=')) {
                 $cachePath = \rex_path::addonCache('media_manager');
             } else {
-                $cachePath = \rex_path::addonCache('media_manager', $this->imageType);
+                $cachePath = \rex_path::addonCache('media_manager', $this->mediaType);
             }
             $mediaManager->setCachePath($cachePath);
 

@@ -32,9 +32,9 @@ class ArticleSliceController
      *
      */
     #[Query]
-    public function getArticleSlice(ID $articleSliceId): ArticleSlice
+    public function getArticleSlice(ID $id): ArticleSlice
     {
-        return $this->service->getSliceById($articleSliceId->val());
+        return $this->service->getSliceById($id->val());
     }
 
 }
