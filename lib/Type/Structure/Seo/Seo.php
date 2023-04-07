@@ -83,30 +83,9 @@ class Seo
     public function getImage(): ?Media
     {
         if ($this->seo) {
-            $images = explode(',', $this->seo->getImages());
-            if (count($images) > 0 && $images[0]) {
-                return Media::getByName($images[0], 'yrewrite_seo_image');
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @return Media[]|null
-     */
-    #[Field]
-    public function getImages(): ?array
-    {
-        if ($this->seo) {
-            $images = explode(',', $this->seo->getImages());
-            if (count($images) > 0) {
-                $media = [];
-                foreach ($images as $image) {
-                    if ($image) {
-                        $media[] = Media::getByName($image, 'og_share');
-                    }
-                }
-                return $media;
+            $image = $this->seo->getImage();
+            if ($image) {
+                return Media::getByName($image, 'yrewrite_seo_image');
             }
         }
         return null;
