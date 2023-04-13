@@ -116,6 +116,9 @@ class ArticleSlice
     {
         $s = new ArticleSlice();
         $s->slice = \rex_article_slice::getArticleSliceById($id);
+        if(!$s->slice->isOnline()) {
+            throw new \Exception("Slice with id {$s->slice->getId()} is not online");
+        }
         return $s;
     }
 
@@ -128,6 +131,9 @@ class ArticleSlice
     {
         $s = new ArticleSlice();
         $s->slice = $obj;
+        if(!$s->slice->isOnline()) {
+            throw new \Exception("Slice with id {$s->slice->getId()} is not online");
+        }
         return $s;
     }
 }

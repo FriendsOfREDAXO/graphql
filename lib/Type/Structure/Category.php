@@ -73,6 +73,9 @@ class Category
             throw new \Exception("Category with id $id not found");
         }
         $c->category = $category;
+        if(!$c->category->isOnline()) {
+            throw new \Exception("Category with id {$c->category->getId()} is not online");
+        }
         return $c;
     }
 
@@ -85,6 +88,9 @@ class Category
     {
         $c = new Category();
         $c->category = $obj;
+        if(!$c->category->isOnline()) {
+            throw new \Exception("Category with id {$c->category->getId()} is not online");
+        }
         return $c;
     }
 

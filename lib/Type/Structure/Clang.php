@@ -62,6 +62,9 @@ class Clang
         if (!$lang) {
             throw new \Exception("CLang with id $id not found");
         }
+        if(!$lang->isOnline()) {
+            throw new \Exception("Clang with id {$lang->getId()} is not online");
+        }
         $clang->clang = $lang;
         return $clang;
     }
@@ -75,6 +78,9 @@ class Clang
     {
         $clang = new self();
         $clang->clang = $obj;
+        if(!$obj->isOnline()) {
+            throw new \Exception("Clang with id {$obj->getId()} is not online");
+        }
         return $clang;
     }
 }

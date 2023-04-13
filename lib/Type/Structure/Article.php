@@ -71,6 +71,9 @@ class Article
     public function getSlices(): array
     {
         $slices = \rex_article_slice::getSlicesForArticle($this->article->getId());
+        $slices = array_filter($slices, function ($slice) {
+            return $slice->isOnline();
+        });
         return array_map(function ($slice) {
             return ArticleSlice::getByObject($slice);
         }, $slices);
@@ -100,6 +103,9 @@ class Article
         if (!$article) {
             throw new \Exception("Article with id $id not found");
         }
+        if(!$article->isOnline()) {
+            $article = \rex_article::getNotfoundArticle();
+        }
         $a->article = $article;
         return $a;
     }
@@ -112,6 +118,9 @@ class Article
     public static function getByObject(\rex_article $obj): Article
     {
         $a = new Article();
+        if(!$obj->isOnline()) {
+            $obj = \rex_article::getNotfoundArticle();
+        }
         $a->article = $obj;
         return $a;
     }

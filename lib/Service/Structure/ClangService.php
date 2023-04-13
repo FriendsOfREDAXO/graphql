@@ -16,6 +16,10 @@ class ClangService
     {
         $article = \rex_article::get($article);
         $clangs = \rex_clang::getAll(1);
+        $clangs = array_filter($clangs, function ($clang) use ($article) {
+            $article = \rex_article::get($article->getId(), $clang->getId());
+            return $article && $article->isOnline();
+        });
         return array_map(function ($clang) use ($article) {
             $lang = Clang::getByObject($clang);
             $lang->isActive = $clang->getId() === $article->getClangId();
