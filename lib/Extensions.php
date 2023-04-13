@@ -13,11 +13,11 @@ class Extensions
     public static function ext__interceptBackendArticleLink(\rex_extension_point $ep)
     {
         $content     = $ep->getSubject();
-        $frontendUrl = trim(\rex_addon::get('graphql')->getConfig('frontend_base_url'), '/');
+        $frontendUrl = \rex::getServer();
         if($frontendUrl) {
             $articleId   = $ep->getParam('article_id');
             $clang       = $ep->getParam('clang');
-            $newUrl      = $frontendUrl . '/' . ltrim(rex_getUrl($articleId, $clang), '/');
+            $newUrl      = rtrim($frontendUrl, '/') . '/' . ltrim(rex_getUrl($articleId, $clang), '/');
             $content[1]  = [
                 'title' => '<a href="' . $newUrl . '" onclick="window.open(this.href); return false;">' . \rex_i18n::msg('article') . ' ' . \rex_i18n::msg('show') . ' <i class="rex-icon rex-icon-external-link"></i></a>',
             ];
