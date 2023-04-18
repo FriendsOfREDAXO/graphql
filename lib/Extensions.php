@@ -7,20 +7,29 @@ class Extensions
     public static function init()
     {
         \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext__initGraphQLEndpoint'], \rex_extension::LATE);
-        \rex_extension::register('STRUCTURE_CONTENT_NAV_RIGHT', [self::class, 'ext__interceptBackendArticleLink']);
+        if(\rex::isBackend()) {
+            \rex_extension::register('OUTPUT_FILTER', [self::class, 'ext__interceptBackendArticleLink']);
+        }
     }
 
     public static function ext__interceptBackendArticleLink(\rex_extension_point $ep)
     {
         $content     = $ep->getSubject();
+        if(!\rex::isBackend()) {
+            return $content;
+        }
+
         $frontendUrl = \rex::getServer();
         if($frontendUrl) {
             $articleId   = $ep->getParam('article_id');
             $clang       = $ep->getParam('clang');
             $newUrl      = rtrim($frontendUrl, '/') . '/' . ltrim(rex_getUrl($articleId, $clang), '/');
-            $content[1]  = [
-                'title' => '<a href="' . $newUrl . '" onclick="window.open(this.href); return false;">' . \rex_i18n::msg('article') . ' ' . \rex_i18n::msg('show') . ' <i class="rex-icon rex-icon-external-link"></i></a>',
-            ];
+            $pattern = '/<li class="pull-right">.*?<a href=".*?" onclick=".*?">.+?<\/a><\/li>/';
+            $content = preg_replace_callback($pattern, function($matches) use ($newUrl) {
+                $match = $matches[0];
+                $match = preg_replace('/href=".*?"/', "href=\"$newUrl\"", $match);
+                return $match;
+            }, $content);
         }
         return $content;
     }
