@@ -58,6 +58,10 @@ class Media
             return null;
         }
 
+        if($this->isSVG()) {
+            return null;
+        }
+
         $srcset = \rex_media_srcset::getSrcSet($this->media->getFilename(), $this->mediaType);
         if (!$srcset) {
             return null;
@@ -87,7 +91,7 @@ class Media
     #[Field]
     public function getSrc(): string
     {
-        return \rex_media_manager::getUrl($this->mediaType, $this->media->getFileName());
+        return \rex_media_manager::getUrl($this->isSVG() ? '' : $this->mediaType, $this->media->getFileName());
     }
 
     private function isSVG(): bool
