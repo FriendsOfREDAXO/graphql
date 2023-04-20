@@ -62,12 +62,17 @@ class Media
         if (!$srcset) {
             return null;
         }
-        return $this->rewriteUrl($srcset);
+        return $this->rewriteSrcsetUrl($srcset);
     }
 
-    private function rewriteUrl(?string $url): string
+    private function rewriteSrcsetUrl(?string $url): ?string
     {
-        return str_replace('./', \rex_yrewrite::getCurrentDomain()->getUrl(), $url);
+        if(!$url) {
+            return null;
+        }
+        $url = str_replace(\rex_yrewrite::getCurrentDomain()->getUrl(), './', $url);
+        $url = preg_replace('/^\\//', $this->getBaseUrl(), $url);
+        return preg_replace('/, \\//', ', ' . $this->getBaseUrl(), $url);
     }
 
     private function getBaseUrl(): string
