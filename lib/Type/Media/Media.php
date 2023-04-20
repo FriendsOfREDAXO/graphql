@@ -70,7 +70,6 @@ class Media
         if(!$url) {
             return null;
         }
-        $url = str_replace(\rex_yrewrite::getCurrentDomain()->getUrl(), './', $url);
         $url = preg_replace('/^\\//', $this->getBaseUrl(), $url);
         return preg_replace('/, \\//', ', ' . $this->getBaseUrl(), $url);
     }
