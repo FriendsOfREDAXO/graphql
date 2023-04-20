@@ -62,17 +62,9 @@ class Media
         if (!$srcset) {
             return null;
         }
-        return $this->rewriteSrcsetUrl($srcset);
+        return $srcset;
     }
 
-    private function rewriteSrcsetUrl(?string $url): ?string
-    {
-        if(!$url) {
-            return null;
-        }
-        $url = preg_replace('/^\\//', $this->getBaseUrl(), $url);
-        return preg_replace('/, \\//', ', ' . $this->getBaseUrl(), $url);
-    }
 
     private function getBaseUrl(): string
     {
@@ -95,13 +87,7 @@ class Media
     #[Field]
     public function getSrc(): string
     {
-        $mediaType = urlencode($this->mediaType);
-        $baseUrl = $this->getBaseUrl();
-        $name = urlencode($this->media->getFilename());
-        if ($this->isSVG()) {
-            return $baseUrl.'media/'.$name;
-        }
-        return $baseUrl.'media/'.$mediaType.'/'.$name;
+        return \rex_media_manager::getUrl($this->mediaType, $this->media->getFileName());
     }
 
     private function isSVG(): bool
