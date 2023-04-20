@@ -8,3 +8,5 @@ requires:
     redaxo: '>=5.14'
     packages:
         yrewrite: '>=2.9'
+
+load: early
