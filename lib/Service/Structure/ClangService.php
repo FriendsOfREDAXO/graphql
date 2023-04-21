@@ -3,6 +3,7 @@
 namespace GraphQL\Service\Structure;
 
 use GraphQL\Type\Structure\Clang;
+use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;
 
 class ClangService
 {
@@ -12,18 +13,21 @@ class ClangService
      *
      * @return Clang[]
      */
-    public function getClangs(int $article): array
+    public function getClangs(?int $articleId): array
     {
-        $article = \rex_article::get($article);
+        $articleId = $articleId ?? \rex_article::getCurrentId();
+        if (!$articleId) {
+            throw new GraphQLException('Could not determine current article');
+        }
         $clangs = \rex_clang::getAll(1);
-        $clangs = array_filter($clangs, function ($clang) use ($article) {
-            $article = \rex_article::get($article->getId(), $clang->getId());
+        $clangs = array_filter($clangs, function ($clang) use ($articleId) {
+            $article = \rex_article::get($articleId, $clang->getId());
             return $article && $article->isOnline();
         });
-        return array_map(function ($clang) use ($article) {
+        return array_map(function ($clang) use ($articleId) {
             $lang = Clang::getByObject($clang);
-            $lang->isActive = $clang->getId() === $article->getClangId();
-            $lang->url = rex_getUrl($article->getId(), $clang->getId());
+            $lang->isActive = $clang->getId() === \rex_clang::getCurrentId();
+            $lang->url = rex_getUrl($articleId, $clang->getId());
             return $lang;
         }, $clangs);
     }

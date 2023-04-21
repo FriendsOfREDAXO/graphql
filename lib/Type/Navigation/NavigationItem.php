@@ -88,7 +88,7 @@ class NavigationItem
         throw new \Exception("Article with id $id not found");
     }
 
-    public static function getByArticle(\rex_article $article, int $currentId): ?self
+    public static function getByArticle(\rex_article $article, ?int $currentId): ?self
     {
         $id = $article->getId();
         $label = $article->getName();
@@ -98,7 +98,7 @@ class NavigationItem
         } else {
             $parentId = $article->getParentId() ?: null;
         }
-        $active = $id === $currentId;
+        $active = $currentId && $id === $currentId;
         $self = new self($id, $label, $url, $parentId, $active, true);
         return \rex_extension::registerPoint(
             new \rex_extension_point('GRAPHQL_PARSE_ARTICLE_NAVIGATION_ITEM', $self, [
@@ -108,15 +108,18 @@ class NavigationItem
         );
     }
 
-    public static function getByCategory(\rex_category $category, int $currentId): ?self
+    public static function getByCategory(\rex_category $category, ?int $currentId): ?self
     {
         $id = $category->getId();
         $label = $category->getName();
         $url = $category->getUrl();
         $parentId = $category->getParentId() ?: null;
-        $currentArticle = \rex_article::get($currentId);
-        $path = explode('|', $currentArticle->getPath());
-        $active = in_array($id, $path);
+        $active = false;
+        if($currentId) {
+            $currentArticle = \rex_article::get($currentId);
+            $path = explode('|', $currentArticle->getPath());
+            $active = in_array($id, $path);
+        }
         $self = new self($id, $label, $url, $parentId, $active, true);
         return \rex_extension::registerPoint(
             new \rex_extension_point('GRAPHQL_PARSE_CATEGORY_NAVIGATION_ITEM', $self, [

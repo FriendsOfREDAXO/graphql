@@ -22,9 +22,9 @@ class NavigationController
      * @return NavigationItem[]
      */
     #[Query]
-    public function getRootNavigation(int $depth, ID $articleId): array
+    public function getRootNavigation(int $depth, ?ID $articleId): array
     {
-        return $this->service->getRootNavigation($depth, $articleId->val());
+        return $this->service->getRootNavigation($depth, $articleId?->val());
     }
 
     /**
@@ -33,9 +33,9 @@ class NavigationController
      * @return NavigationItem[]
      */
     #[Query]
-    public function getNavigation(string $name, ID $articleId): array
+    public function getNavigation(string $name, ?ID $articleId): array
     {
-        return $this->service->getNavigationByName($name, $articleId->val());
+        return $this->service->getNavigationByName($name, $articleId?->val());
     }
 
 }

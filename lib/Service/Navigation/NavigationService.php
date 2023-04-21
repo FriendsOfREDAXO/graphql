@@ -3,6 +3,7 @@
 namespace GraphQL\Service\Navigation;
 
 use GraphQL\Type\Navigation\NavigationItem;
+use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;
 
 class NavigationService
 {
@@ -10,10 +11,10 @@ class NavigationService
     /**
      * @return NavigationItem[]
      */
-    public function getRootNavigation(int $depth, int $articleId): array
+    public function getRootNavigation(int $depth, ?int $articleId): array
     {
         $navigation = [];
-
+        $articleId = $articleId ?? \rex_article::getCurrentId();
         $siteStartArticle = \rex_article::getSiteStartArticle();
         $startNavItem = NavigationItem::getByArticle($siteStartArticle, $articleId);
         if ($startNavItem) {
@@ -64,9 +65,13 @@ class NavigationService
         return $children;
     }
 
-    public function getNavigationByName(string $name, int $articleId): array
+    public function getNavigationByName(string $name, ?int $articleId): array
     {
         $navigation = [];
+        $articleId = $articleId ?? \rex_article::getCurrentId();
+        if(!$articleId) {
+            throw new GraphQLException('Could not determine current article');
+        }
         $navItems = array_filter(\rex_navbuilder::getStructure($name));
 
         if ($navItems) {

@@ -23,8 +23,8 @@ class ClangController
      * @return Clang[]
      */
     #[Query]
-    public function getClangs(ID $articleId): array
+    public function getClangs(?ID $articleId): array
     {
-        return $this->service->getClangs($articleId->val());
+        return $this->service->getClangs($articleId?->val());
     }
 }
