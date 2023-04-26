@@ -12,6 +12,7 @@ class ClangService
      * Get all available languages
      *
      * @return Clang[]
+     * @throws GraphQLException
      */
     public function getClangs(?int $articleId): array
     {

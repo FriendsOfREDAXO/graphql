@@ -2,15 +2,20 @@
 
 namespace GraphQL\Type\Structure;
 
-use TheCodingMachine\GraphQLite\Types\ID;
+use Exception;
+use rex_article_slice;
+use rex_extension;
+use rex_extension_point;
+use rex_module;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Annotations\Type;
+use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;
+use TheCodingMachine\GraphQLite\Types\ID;
 
 #[Type]
 class ArticleSlice
 {
-
-    public \rex_article_slice $slice;
+    public rex_article_slice $slice;
 
     #[Field]
     public function getId(): ID
@@ -21,12 +26,12 @@ class ArticleSlice
     #[Field]
     public function getModuleCode(): ?string
     {
-        $module = new \rex_module($this->slice->getModuleId());
+        $module = new rex_module($this->slice->getModuleId());
         return $module->getKey() ?: null;
     }
 
     /**
-     * Values as JSON-Object
+     * Values as JSON-Object.
      */
     #[Field]
     public function getValues(): ?string
@@ -34,15 +39,15 @@ class ArticleSlice
         $values = $this->parseValueObjects(function ($i) {
             return $this->slice->getValueArray($i) ?: $this->slice->getValue($i);
         });
-        return \rex_extension::registerPoint(
-            new \rex_extension_point('GRAPHQL_SLICE_VALUES', $values, [
+        return rex_extension::registerPoint(
+            new rex_extension_point('GRAPHQL_SLICE_VALUES', $values, [
                 'slice' => $this->slice,
-            ])
+            ]),
         ) ?: null;
     }
 
     /**
-     * Media as JSON-Object
+     * Media as JSON-Object.
      */
     #[Field]
     public function getMedia(): ?string
@@ -53,8 +58,7 @@ class ArticleSlice
     }
 
     /**
-     * Medialist as JSON-Object
-     *
+     * Medialist as JSON-Object.
      */
     #[Field]
     public function getMediaList(): ?string
@@ -65,7 +69,7 @@ class ArticleSlice
     }
 
     /**
-     * Link as JSON-Object
+     * Link as JSON-Object.
      */
     #[Field]
     public function getLink(): ?string
@@ -76,7 +80,7 @@ class ArticleSlice
     }
 
     /**
-     * Linklist as JSON-Object
+     * Linklist as JSON-Object.
      */
     #[Field]
     public function getLinkList(): ?string
@@ -94,7 +98,7 @@ class ArticleSlice
     {
         $values = [];
         $found = false;
-        for ($i = 1; $i <= $count; $i++) {
+        for ($i = 1; $i <= $count; ++$i) {
             $value = $callback($i);
             if ($value) {
                 $values[$i] = $value;
@@ -112,27 +116,28 @@ class ArticleSlice
      *
      * @return ArticleSlice proxy object
      */
-    public static function getById(int $id): ArticleSlice
+    public static function getById(int $id): self
     {
-        $s = new ArticleSlice();
-        $s->slice = \rex_article_slice::getArticleSliceById($id);
-        if(!$s->slice->isOnline()) {
-            throw new \Exception("Slice with id {$s->slice->getId()} is not online");
+        $s = new self();
+        $s->slice = rex_article_slice::getArticleSliceById($id);
+        if (!$s->slice->isOnline()) {
+            throw new Exception("Slice with id {$s->slice->getId()} is not online");
         }
         return $s;
     }
 
     /**
-     * @param \rex_article_slice $obj \rex_article_slice object to encapsulate
+     * @param rex_article_slice $obj \rex_article_slice object to encapsulate
      *
      * @return ArticleSlice proxy object
+     * @throws GraphQLException if slice is not online
      */
-    public static function getByObject(\rex_article_slice $obj): ArticleSlice
+    public static function getByObject(rex_article_slice $obj): self
     {
-        $s = new ArticleSlice();
+        $s = new self();
         $s->slice = $obj;
-        if(!$s->slice->isOnline()) {
-            throw new \Exception("Slice with id {$s->slice->getId()} is not online");
+        if (!$s->slice->isOnline()) {
+            throw new GraphQLException("Slice with id {$s->slice->getId()} is not online");
         }
         return $s;
     }

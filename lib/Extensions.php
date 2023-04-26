@@ -51,11 +51,13 @@ class Extensions
     public static function ext__rewriteMediaUrl(\rex_extension_point $ep)
     {
         $subject = $ep->getSubject();
-        if(\rex_yrewrite::getCurrentDomain()) {
+        if (\rex_yrewrite::getCurrentDomain()) {
             $basePath = \rex_yrewrite::getCurrentDomain()->getPath();
-            $path = str_replace($basePath, '', $subject);
-            $baseUrl = \rex_yrewrite::getCurrentDomain()->getUrl();
-            return $baseUrl . $path;
+            $matches = [];
+            preg_match('_^(' . $basePath . ')(.*)_', $subject, $matches);
+            $path = ltrim($matches[2], '/');
+            $baseUrl = rtrim(\rex_yrewrite::getCurrentDomain()->getUrl(), '/');
+            return $baseUrl . '/' . $path;
         }
         return $subject;
     }
@@ -63,9 +65,11 @@ class Extensions
     public static function ext__rewriteArticleUrl(\rex_extension_point $ep)
     {
         $subject = $ep->getSubject();
-        if(\rex_yrewrite::getCurrentDomain()) {
+        if (\rex_yrewrite::getCurrentDomain()) {
             $baseUrl = \rex_yrewrite::getCurrentDomain()->getPath();
-            return '/' . str_replace($baseUrl, '', $subject);
+            $matches = [];
+            preg_match('_^(' . $baseUrl . ')(.*)_', $subject, $matches);
+            return '/' . $matches[2];
         }
         return $subject;
     }

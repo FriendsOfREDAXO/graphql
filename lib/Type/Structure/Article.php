@@ -2,16 +2,18 @@
 
 namespace GraphQL\Type\Structure;
 
-use GraphQL\Type\Structure\Seo\Seo;
-use TheCodingMachine\GraphQLite\Types\ID;
-use TheCodingMachine\GraphQLite\Annotations\Type;
+use DateTimeInterface;
+use rex_article;
+use rex_article_slice;
 use TheCodingMachine\GraphQLite\Annotations\Field;
+use TheCodingMachine\GraphQLite\Annotations\Type;
+use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;
+use TheCodingMachine\GraphQLite\Types\ID;
 
 #[Type]
 class Article
 {
-
-    public \rex_article $article;
+    public rex_article $article;
 
     #[Field]
     public function getId(): ID
@@ -43,16 +45,22 @@ class Article
         return $this->article->isOnline();
     }
 
+    /**
+     * @throws GraphQLException if clang is not online or not found
+     */
     #[Field]
     public function getClang(): Clang
     {
         return Clang::getById($this->article->getClangId());
     }
 
+    /**
+     * @throws GraphQLException
+     */
     #[Field]
-    public function getSeo(): Seo
+    public function getMetadata(): Metadata
     {
-        return Seo::getByArticle($this->article);
+        return Metadata::getByArticleId($this->getId()->val(), $this->getClang()->getId()->val());
     }
 
     /**
@@ -65,30 +73,31 @@ class Article
     }
 
     /**
+     * @throws GraphQLException if some slices are not online
      * @return ArticleSlice[]
      */
     #[Field]
     public function getSlices(): array
     {
-        $slices = \rex_article_slice::getSlicesForArticle($this->article->getId());
-        $slices = array_filter($slices, function ($slice) {
+        $slices = rex_article_slice::getSlicesForArticle($this->article->getId());
+        $slices = array_filter($slices, static function ($slice) {
             return $slice->isOnline();
         });
-        return array_map(function ($slice) {
+        return array_map(static function ($slice) {
             return ArticleSlice::getByObject($slice);
         }, $slices);
     }
 
     #[Field]
-    public function getCreateDate(): string
+    public function getCreatedAt(): string
     {
-        return date(\DateTimeInterface::ISO8601, $this->article->getCreateDate());
+        return date(DateTimeInterface::ISO8601, $this->article->getCreateDate());
     }
 
     #[Field]
-    public function getUpdateDate(): string
+    public function getUpdatedAt(): string
     {
-        return date(\DateTimeInterface::ISO8601, $this->article->getUpdateDate());
+        return date(DateTimeInterface::ISO8601, $this->article->getUpdateDate());
     }
 
     /**
@@ -96,33 +105,29 @@ class Article
      *
      * @return Article proxy object
      */
-    public static function getById(int $id): Article
+    public static function getById(int $id): self
     {
-        $a = new Article();
-        $article = \rex_article::get($id);
-        if (!$article) {
-            throw new \Exception("Article with id $id not found");
-        }
-        if(!$article->isOnline()) {
-            $article = \rex_article::getNotfoundArticle();
+        $a = new self();
+        $article = rex_article::get($id);
+        if (!$article || !$article->isOnline()) {
+            $article = rex_article::getNotfoundArticle();
         }
         $a->article = $article;
         return $a;
     }
 
     /**
-     * @param \rex_article $obj \rex_article object to encapsulate
+     * @param rex_article $obj \rex_article object to encapsulate
      *
      * @return Article proxy object
      */
-    public static function getByObject(\rex_article $obj): Article
+    public static function getByObject(rex_article $obj): self
     {
-        $a = new Article();
-        if(!$obj->isOnline()) {
-            $obj = \rex_article::getNotfoundArticle();
+        $a = new self();
+        if (!$obj->isOnline()) {
+            $obj = rex_article::getNotfoundArticle();
         }
         $a->article = $obj;
         return $a;
     }
-
 }
