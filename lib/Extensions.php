@@ -6,13 +6,16 @@ class Extensions
 {
     public static function init()
     {
-        \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext__initGraphQLEndpoint'], \rex_extension::LATE);
         if (\rex::isBackend()) {
             \rex_extension::register('OUTPUT_FILTER', [self::class, 'ext__interceptBackendArticleLink']);
         }
-        \rex_extension::register('MEDIA_MANAGER_URL', [self::class, 'ext__rewriteMediaUrl'], \rex_extension::LATE);
-        \rex_extension::register('MEDIA_URL_REWRITE', [self::class, 'ext__rewriteMediaUrl'], \rex_extension::LATE);
-        \rex_extension::register('URL_REWRITE', [self::class, 'ext__rewriteArticleUrl'], \rex_extension::LATE);
+        if(\rex::isFrontend()) {
+            \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext__initGraphQLEndpoint'], \rex_extension::LATE);
+            \rex_extension::register('GRAPHQL_SLICE_VALUES', [self::class, 'ext__replaceInterLinks']);
+            \rex_extension::register('MEDIA_MANAGER_URL', [self::class, 'ext__rewriteMediaUrl'], \rex_extension::LATE);
+            \rex_extension::register('MEDIA_URL_REWRITE', [self::class, 'ext__rewriteMediaUrl'], \rex_extension::LATE);
+            \rex_extension::register('URL_REWRITE', [self::class, 'ext__rewriteArticleUrl'], \rex_extension::LATE);
+        }
     }
 
     public static function ext__interceptBackendArticleLink(\rex_extension_point $ep)
@@ -72,5 +75,17 @@ class Extensions
             return '/' . $matches[2];
         }
         return $subject;
+    }
+
+    public static function ext__replaceInterLinks(\rex_extension_point $ep)
+    {
+        $content = $ep->getSubject();
+        return preg_replace_callback(
+            '@redaxo:\\\/\\\/(\d+)(?:-(\d+))?/?@i',
+            function (array $matches) {
+                return rex_getUrl((int) $matches[1], (int) ($matches[2] ?? \rex_clang::getCurrentId()));
+            },
+            $content,
+        );
     }
 }
