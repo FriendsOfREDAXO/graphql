@@ -12,7 +12,8 @@ class ClassFinder
             $namespace = strtolower($namespace);
             foreach ($classes as $class) {
                 if (str_starts_with($class, $namespace)) {
-                    $classList[] = $class;
+                    $clazz = new \ReflectionClass($class);
+                    $classList[] = $clazz->getName();
                 }
             }
         }

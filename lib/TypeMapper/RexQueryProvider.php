@@ -2,6 +2,8 @@
 
 namespace GraphQL\TypeMapper;
 
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Validator\ValidatorBuilder;
 use TheCodingMachine\GraphQLite\AggregateControllerQueryProvider;
 use TheCodingMachine\GraphQLite\FactoryContext;
 use TheCodingMachine\GraphQLite\QueryProviderInterface;
@@ -21,6 +23,15 @@ class RexQueryProvider implements QueryProviderInterface
             new \rex_extension_point('GRAPHQL_CONTROLLER_NAMESPACES', ['GraphQL\\Controller'])
         );
         $classes = ClassFinder::findByNamespaces($namespaces);
+
+        $validatorBuilder = new ValidatorBuilder();
+        $validatorBuilder->enableAnnotationMapping();
+        $validator = $validatorBuilder->getValidator();
+
+        foreach($classes as $class) {
+            $container = $this->context->getContainer();
+            $container->set($class, new $class($validator));
+        }
 
         $this->aggregateQueryProvider = new AggregateControllerQueryProvider(
             $classes,

@@ -2,6 +2,7 @@
     "require": {
         "thecodingmachine/graphqlite": "^6.0",
         "yiisoft/cache": "^1.0",
-        "php-di/php-di": "^6.4"
+        "thecodingmachine/graphqlite-symfony-validator-bridge": "6.0.x-dev",
+        "symfony/dependency-injection": "^6.1"
     }
 }

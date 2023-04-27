@@ -2,10 +2,13 @@
 
 namespace GraphQL;
 
-use DI\Container;
+use GraphQL\Error\DebugFlag;
+use GraphQL\Type\SchemaConfig;
 use GraphQL\TypeMapper\RexQueryProviderFactory;
 use GraphQL\TypeMapper\RexTypeMapperFactory;
+use Symfony\Component\DependencyInjection\Container;
 use TheCodingMachine\GraphQLite\Context\Context;
+use TheCodingMachine\GraphQLite\Exceptions\WebonyxErrorHandler;
 use TheCodingMachine\GraphQLite\Schema;
 use TheCodingMachine\GraphQLite\SchemaFactory;
 use Yiisoft\Cache\ArrayCache;
@@ -21,7 +24,7 @@ class Endpoint
         );
     }
 
-    public function executeQuery(): \GraphQL\Executor\ExecutionResult
+    public function executeQuery(): array
     {
         $input = $this->readInput();
         $schema = $this->generateSchema();
@@ -32,13 +35,20 @@ class Endpoint
             null,
             new Context(),
             $input['variables'] ?? null
-        );
+        )->setErrorFormatter([WebonyxErrorHandler::class, 'errorFormatter'])
+            ->setErrorsHandler([WebonyxErrorHandler::class, 'errorHandler'])
+            ->toArray(self::isDebug() ? DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE : DebugFlag::NONE);
     }
 
     private function generateSchema(): Schema
     {
         $this->schemaFactory->addTypeMapperFactory(new RexTypeMapperFactory());
         $this->schemaFactory->addQueryProviderFactory(new RexQueryProviderFactory());
+        if (static::isDebug()) {
+            $this->schemaFactory->devMode();
+        } else {
+            $this->schemaFactory->prodMode();
+        }
         return $this->schemaFactory->createSchema();
     }
 
@@ -56,9 +66,7 @@ class Endpoint
     {
         $endpoint = new Endpoint();
         $result = $endpoint->executeQuery();
-        $isDebug = static::isDebug();
-        $output = $result->toArray($isDebug);
-        static::sendResponse($output);
+        static::sendResponse($result);
     }
 
     private static function sendResponse(array $output): void
