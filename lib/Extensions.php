@@ -56,11 +56,8 @@ class Extensions
         $subject = $ep->getSubject();
         if (\rex_yrewrite::getCurrentDomain()) {
             $basePath = \rex_yrewrite::getCurrentDomain()->getPath();
-            $matches = [];
-            preg_match('_^(' . $basePath . ')(.*)_', $subject, $matches);
-            $path = ltrim($matches[2], '/');
-            $baseUrl = rtrim(\rex_yrewrite::getCurrentDomain()->getUrl(), '/');
-            return $baseUrl . '/' . $path;
+            $baseUrl = \rex_yrewrite::getCurrentDomain()->getUrl();
+            return $baseUrl . preg_replace('@^' . preg_quote($basePath, '@') . '@', '', $subject);
         }
         return $subject;
     }
@@ -69,10 +66,8 @@ class Extensions
     {
         $subject = $ep->getSubject();
         if (\rex_yrewrite::getCurrentDomain()) {
-            $baseUrl = \rex_yrewrite::getCurrentDomain()->getPath();
-            $matches = [];
-            preg_match('_^(' . $baseUrl . ')(.*)_', $subject, $matches);
-            return '/' . $matches[2];
+            $basePath = \rex_yrewrite::getCurrentDomain()->getPath();
+            return '/' . preg_replace('@^' . preg_quote($basePath, '@') . '@', '', $subject);
         }
         return $subject;
     }
