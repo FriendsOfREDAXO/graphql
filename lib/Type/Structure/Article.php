@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Type\Structure;
+namespace RexGraphQL\Type\Structure;
 
 use DateTimeInterface;
 use rex_article;

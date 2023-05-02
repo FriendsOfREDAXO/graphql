@@ -1,9 +1,9 @@
 <?php
 
-namespace GraphQL\Controller;
+namespace RexGraphQL\Controller;
 
 use GraphQL\Service\Structure\ContentTypeService;
-use GraphQL\Type\Structure\ContentType;
+use RexGraphQL\Type\Structure\ContentType;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 
 class ContentTypeController

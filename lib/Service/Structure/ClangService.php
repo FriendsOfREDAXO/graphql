@@ -2,7 +2,7 @@
 
 namespace GraphQL\Service\Structure;
 
-use GraphQL\Type\Structure\Clang;
+use RexGraphQL\Type\Structure\Clang;
 use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;
 
 class ClangService

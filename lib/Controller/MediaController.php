@@ -1,8 +1,8 @@
 <?php
 
-namespace GraphQL\Controller;
+namespace RexGraphQL\Controller;
 
-use GraphQL\Type\Media\Media;
+use RexGraphQL\Type\Media\Media;
 use GraphQL\Service\Media\MediaService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 

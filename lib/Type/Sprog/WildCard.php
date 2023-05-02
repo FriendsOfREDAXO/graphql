@@ -1,8 +1,8 @@
 <?php
 
-namespace GraphQL\Type\Sprog;
+namespace RexGraphQL\Type\Sprog;
 
-use GraphQL\Type\Structure\Clang;
+use RexGraphQL\Type\Structure\Clang;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Types\ID;
@@ -10,12 +10,12 @@ use TheCodingMachine\GraphQLite\Types\ID;
 #[Type]
 class WildCard
 {
-    private int $id;
-    private string $wildcard;
-    private string $replace;
-    private int $clangId;
+    private ?int $id;
+    private ?string $wildcard;
+    private ?string $replace;
+    private ?int $clangId;
 
-    public function __construct(int $id, string $wildcard, string $replace, int $clangId)
+    public function __construct(int $id = null, string $wildcard= null, string $replace= null, int $clangId= null)
     {
         $this->id = $id;
         $this->wildcard = $wildcard;

@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Type\Structure;
+namespace RexGraphQL\Type\Structure;
 
 use rex_category;
 use TheCodingMachine\GraphQLite\Annotations\Field;

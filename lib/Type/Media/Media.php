@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Type\Media;
+namespace RexGraphQL\Type\Media;
 
 use TheCodingMachine\GraphQLite\Types\ID;
 use TheCodingMachine\GraphQLite\Annotations\Field;

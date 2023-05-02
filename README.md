@@ -49,14 +49,14 @@ The addon provides the following queries:
 
 Before creating your own queries and mutations, you need to create your own
 types. You can do this by creating a class that uses a namespace that starts
-with `GraphQL\Type`. After that, you need to annotate with the `#[Type]`
+with `RexGraphQL\Type`. After that, you need to annotate with the `#[Type]`
 annotation.
 For example:
 
 ```php
 <?php
 
-namespace GraphQL\Type\MyType;
+namespace RexGraphQL\Type\MyType;
 
 use TheCodingMachine\GraphQLite\Annotations\Type;
 
@@ -73,7 +73,7 @@ getter methods with the `#[Field]` annotation. For example:
 ```php
 <?php
 
-namespace GraphQL\Type;
+namespace RexGraphQL\Type;
 
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Annotations\Type;
@@ -102,7 +102,7 @@ example:
 ```php
 <?php
 
-namespace GraphQL\Controller;
+namespace RexGraphQL\Controller;
 
 use TheCodingMachine\GraphQLite\Annotations\Mutation;
 use TheCodingMachine\GraphQLite\Annotations\Query;
@@ -138,9 +138,9 @@ array. For example, if the return type is `string[]`, the GraphQL type will be
 ```php
 <?php
 
-namespace GraphQL\Controller;
+namespace RexGraphQL\Controller;
 
-use GraphQL\Type\MyType;
+use RexGraphQL\Type\MyType;
 use TheCodingMachine\GraphQLite\Annotations\Mutation;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 
@@ -183,9 +183,9 @@ Queries and mutations can also have parameters. For example:
 ```php
 <?php
 
-namespace GraphQL\Controller;
+namespace RexGraphQL\Controller;
 
-use GraphQL\Type\MyType;
+use RexGraphQL\Type\MyType;
 use TheCodingMachine\GraphQLite\Annotations\Mutation;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 

@@ -2,7 +2,7 @@
 
 namespace GraphQL\Service\Navigation;
 
-use GraphQL\Type\Navigation\NavigationItem;
+use RexGraphQL\Type\Navigation\NavigationItem;
 use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;
 
 class NavigationService

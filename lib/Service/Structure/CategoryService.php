@@ -2,7 +2,7 @@
 
 namespace GraphQL\Service\Structure;
 
-use GraphQL\Type\Structure\Category;
+use RexGraphQL\Type\Structure\Category;
 
 class CategoryService
 {

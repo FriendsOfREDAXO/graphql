@@ -2,7 +2,7 @@
 
 namespace GraphQL\Service\Media;
 
-use GraphQL\Type\Media\Media;
+use RexGraphQL\Type\Media\Media;
 
 class MediaService
 {

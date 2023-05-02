@@ -1,9 +1,9 @@
 <?php
 
-namespace GraphQL\Controller;
+namespace RexGraphQL\Controller;
 
 use GraphQL\Service\Navigation\NavigationService;
-use GraphQL\Type\Navigation\NavigationItem;
+use RexGraphQL\Type\Navigation\NavigationItem;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 use TheCodingMachine\GraphQLite\Types\ID;
 

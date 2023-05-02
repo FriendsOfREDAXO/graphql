@@ -1,8 +1,8 @@
 <?php
 
-namespace GraphQL\Controller;
+namespace RexGraphQL\Controller;
 
-use GraphQL\Type\Structure\Category;
+use RexGraphQL\Type\Structure\Category;
 use GraphQL\Service\Structure\CategoryService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 

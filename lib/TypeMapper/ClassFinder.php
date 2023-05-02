@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\TypeMapper;
+namespace GraphQL;
 
 class ClassFinder
 {

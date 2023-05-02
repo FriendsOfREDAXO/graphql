@@ -1,8 +1,8 @@
 <?php
 
-namespace GraphQL\Controller;
+namespace RexGraphQL\Controller;
 
-use GraphQL\Type\Structure\Clang;
+use RexGraphQL\Type\Structure\Clang;
 use GraphQL\Service\Structure\ClangService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 use TheCodingMachine\GraphQLite\Types\ID;

@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Type\Navigation;
+namespace RexGraphQL\Type\Navigation;
 
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Annotations\Type;
@@ -11,13 +11,13 @@ class NavigationItem
 {
 
     private $id;
-    private string $label;
-    private string $url;
+    private ?string $label;
+    private ?string $url;
     private ?int $parentId;
-    private bool $isActive;
-    private bool $internal;
+    private ?bool $isActive;
+    private ?bool $internal;
 
-    public function __construct($id, string $label, string $url, ?int $parentId, bool $isActive, bool $internal)
+    public function __construct(mixed $id = null, ?string $label = null, ?string $url = null, ?int $parentId = null, ?bool $isActive = null, ?bool $internal = null)
     {
         $this->id = $id;
         $this->label = $label;

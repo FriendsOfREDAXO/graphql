@@ -2,7 +2,7 @@
 
 namespace GraphQL\Service\Structure;
 
-use GraphQL\Type\Structure\ArticleSlice;
+use RexGraphQL\Type\Structure\ArticleSlice;
 
 class ArticleSliceService
 {

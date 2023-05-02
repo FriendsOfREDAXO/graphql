@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Type\Structure;
+namespace RexGraphQL\Type\Structure;
 
 use rex;
 use rex_article;
@@ -14,10 +14,10 @@ use Url\UrlManager;
 #[Type]
 class Breadcrumb
 {
-    private string $label;
-    private string $url;
+    private ?string $label;
+    private ?string $url;
 
-    public function __construct(string $label, string $url)
+    public function __construct(string $label = null, string $url = null)
     {
         $this->label = $label;
         $this->url = $url;

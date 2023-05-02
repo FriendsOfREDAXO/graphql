@@ -1,8 +1,8 @@
 <?php
 
-namespace GraphQL\Controller;
+namespace RexGraphQL\Controller;
 
-use GraphQL\Type\Structure\ArticleSlice;
+use RexGraphQL\Type\Structure\ArticleSlice;
 use GraphQL\Service\Structure\ArticleSliceService;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 use TheCodingMachine\GraphQLite\Types\ID;

@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\TypeMapper;
+namespace GraphQL;
 
 use TheCodingMachine\GraphQLite\FactoryContext;
 use TheCodingMachine\GraphQLite\QueryProviderFactoryInterface;

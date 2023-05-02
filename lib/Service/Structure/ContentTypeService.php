@@ -2,7 +2,7 @@
 
 namespace GraphQL\Service\Structure;
 
-use GraphQL\Type\Structure\ContentType;
+use RexGraphQL\Type\Structure\ContentType;
 use rex;
 use rex_addon;
 use rex_clang;

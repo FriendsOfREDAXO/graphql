@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Type\Structure;
+namespace RexGraphQL\Type\Structure;
 
 use Exception;
 use rex;
@@ -14,11 +14,11 @@ use Url\UrlManager;
 #[Type]
 class ContentType
 {
-    private string $type;
-    private int $clangId;
-    private ID $elementId;
+    private ?string $type;
+    private ?int $clangId;
+    private ?ID $elementId;
 
-    public function __construct(string $type, int $clangId, ID $elementId)
+    public function __construct(string $type = null, int $clangId = null, ID $elementId = null)
     {
         $this->type = $type;
         $this->clangId = $clangId;

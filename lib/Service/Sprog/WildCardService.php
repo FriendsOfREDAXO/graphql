@@ -2,7 +2,7 @@
 
 namespace GraphQL\Service\Sprog;
 
-use GraphQL\Type\Sprog\WildCard;
+use RexGraphQL\Type\Sprog\WildCard;
 
 class WildCardService
 {

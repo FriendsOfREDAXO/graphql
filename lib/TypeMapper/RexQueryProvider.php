@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\TypeMapper;
+namespace GraphQL;
 
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\ValidatorBuilder;
@@ -20,7 +20,7 @@ class RexQueryProvider implements QueryProviderInterface
         $fieldsBuilder = $this->context->getFieldsBuilder();
 
         $namespaces = \rex_extension::registerPoint(
-            new \rex_extension_point('GRAPHQL_CONTROLLER_NAMESPACES', ['GraphQL\\Controller'])
+            new \rex_extension_point('GRAPHQL_CONTROLLER_NAMESPACES', ['RexGraphQL\\Controller'])
         );
         $classes = ClassFinder::findByNamespaces($namespaces);
 
@@ -31,6 +31,7 @@ class RexQueryProvider implements QueryProviderInterface
         foreach($classes as $class) {
             $container = $this->context->getContainer();
             $container->set($class, new $class($validator));
+            $classes[$class] = $class;
         }
 
         $this->aggregateQueryProvider = new AggregateControllerQueryProvider(

@@ -3,15 +3,19 @@
 namespace GraphQL;
 
 use GraphQL\Error\DebugFlag;
-use GraphQL\Type\SchemaConfig;
-use GraphQL\TypeMapper\RexQueryProviderFactory;
-use GraphQL\TypeMapper\RexTypeMapperFactory;
+use rex;
+use rex_extension;
+use rex_extension_point;
+use rex_response;
+use rex_var;
 use Symfony\Component\DependencyInjection\Container;
 use TheCodingMachine\GraphQLite\Context\Context;
 use TheCodingMachine\GraphQLite\Exceptions\WebonyxErrorHandler;
 use TheCodingMachine\GraphQLite\Schema;
 use TheCodingMachine\GraphQLite\SchemaFactory;
 use Yiisoft\Cache\ArrayCache;
+
+use function is_array;
 
 class Endpoint
 {
@@ -20,7 +24,7 @@ class Endpoint
     public function __construct()
     {
         $this->schemaFactory = new SchemaFactory(
-            new ArrayCache(), new Container()
+            new ArrayCache(), new Container(),
         );
     }
 
@@ -34,7 +38,7 @@ class Endpoint
             $input['query'],
             null,
             new Context(),
-            $input['variables'] ?? null
+            $input['variables'] ?? null,
         )->setErrorFormatter([WebonyxErrorHandler::class, 'errorFormatter'])
             ->setErrorsHandler([WebonyxErrorHandler::class, 'errorHandler'])
             ->toArray(self::isDebug() ? DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE : DebugFlag::NONE);
@@ -42,8 +46,8 @@ class Endpoint
 
     private function generateSchema(): Schema
     {
-        $this->schemaFactory->addTypeMapperFactory(new RexTypeMapperFactory());
-        $this->schemaFactory->addQueryProviderFactory(new RexQueryProviderFactory());
+        $this->schemaFactory->addQueryProviderFactory(new \GraphQL\RexQueryProviderFactory());
+        $this->schemaFactory->addTypeMapperFactory(new \GraphQL\RexTypeMapperFactory());
         if (static::isDebug()) {
             $this->schemaFactory->devMode();
         } else {
@@ -55,7 +59,7 @@ class Endpoint
     private function readInput(): array
     {
         $rawInput = file_get_contents('php://input');
-        $value = \rex_var::toArray($rawInput);
+        $value = rex_var::toArray($rawInput);
         if (is_array($value)) {
             return $value;
         }
@@ -64,28 +68,28 @@ class Endpoint
 
     public static function registerEndpoint(): void
     {
-        $endpoint = new Endpoint();
+        $endpoint = new self();
         $result = $endpoint->executeQuery();
         static::sendResponse($result);
     }
 
     private static function sendResponse(array $output): void
     {
-        \rex_response::cleanOutputBuffers();
-        \rex_response::sendCacheControl();
-        \rex_response::setStatus(\rex_response::HTTP_OK);
-        \rex_response::setHeader('Access-Control-Allow-Origin', '*');
-        \rex_response::setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        rex_response::cleanOutputBuffers();
+        rex_response::sendCacheControl();
+        rex_response::setStatus(rex_response::HTTP_OK);
+        rex_response::setHeader('Access-Control-Allow-Origin', '*');
+        rex_response::setHeader('Access-Control-Allow-Headers', 'Content-Type');
         $output = json_encode($output);
-        $output = \rex_extension::registerPoint(new \rex_extension_point('GRAPHQL_OUTPUT_FILTER', $output));
-        \rex_response::sendContent($output, 'application/json');
+        $output = rex_extension::registerPoint(new rex_extension_point('GRAPHQL_OUTPUT_FILTER', $output));
+        rex_response::sendContent($output, 'application/json');
         exit;
     }
 
     private static function isDebug(): bool
     {
-        return \rex_extension::registerPoint(
-            new \rex_extension_point('GRAPHQL_DEBUG', \rex::isDebugMode())
+        return rex_extension::registerPoint(
+            new rex_extension_point('GRAPHQL_DEBUG', rex::isDebugMode()),
         );
     }
 }

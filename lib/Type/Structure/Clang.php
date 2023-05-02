@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Type\Structure;
+namespace RexGraphQL\Type\Structure;
 
 use rex_clang;
 use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;

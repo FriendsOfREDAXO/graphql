@@ -1,10 +1,10 @@
 <?php
 
-namespace GraphQL\Type\Structure;
+namespace RexGraphQL\Type\Structure;
 
 use DateTimeInterface;
 use Exception;
-use GraphQL\Type\Media\Media;
+use RexGraphQL\Type\Media\Media;
 use rex;
 use rex_article;
 use rex_exception;
@@ -18,17 +18,17 @@ use Url\UrlManager;
 #[Type]
 class Metadata
 {
-    private string $title;
-    private string $description;
-    private string $robots;
-    private string $canonical;
-    private string $image;
+    private ?string $title;
+    private ?string $description;
+    private ?string $robots;
+    private ?string $canonical;
+    private ?string $image;
 
-    private int $createdAt;
-    private int $updatedAt;
-    public string $type = 'article';
+    private ?int $createdAt;
+    private ?int $updatedAt;
+    public ?string $type = 'article';
 
-    public function __construct(string $title, string $description, string $robots, string $canonical, string $image, ?int $createdAt, ?int $updatedAt)
+    public function __construct(string $title = null, string $description = null, string $robots = null, string $canonical = null, string $image = null, ?int $createdAt = null, ?int $updatedAt = null)
     {
         $this->title = $title;
         $this->description = $description;
