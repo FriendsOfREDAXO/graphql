@@ -9,7 +9,7 @@ class Extensions
         if (\rex::isBackend()) {
             \rex_extension::register('OUTPUT_FILTER', [self::class, 'ext__interceptBackendArticleLink']);
         }
-        if(\rex::isFrontend()) {
+        if (\rex::isFrontend()) {
             \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext__initGraphQLEndpoint'], \rex_extension::LATE);
             \rex_extension::register('GRAPHQL_SLICE_VALUES', [self::class, 'ext__replaceInterLinks']);
             \rex_extension::register('MEDIA_MANAGER_URL', [self::class, 'ext__rewriteMediaUrl'], \rex_extension::LATE);
@@ -58,7 +58,13 @@ class Extensions
         if (\rex_yrewrite::getCurrentDomain()) {
             $basePath = \rex_yrewrite::getCurrentDomain()->getPath();
             $baseUrl = \rex_yrewrite::getCurrentDomain()->getUrl();
-            return $baseUrl . preg_replace('@^' . preg_quote($basePath, '@') . '@', '', $subject);
+            if ($subject) {
+                return $baseUrl . preg_replace('@^' . preg_quote($basePath, '@') . '@', '', $subject);
+            }
+            $media = $ep->getParam('media');
+            if ($media) {
+                return $baseUrl . 'media/' . $media->getFilename();
+            }
         }
         return $subject;
     }
@@ -81,7 +87,7 @@ class Extensions
         return preg_replace_callback(
             '@redaxo:\\\/\\\/(\d+)(?:-(\d+))?/?@i',
             function (array $matches) {
-                return rex_getUrl((int) $matches[1], (int) ($matches[2] ?? \rex_clang::getCurrentId()));
+                return rex_getUrl((int)$matches[1], (int)($matches[2] ?? \rex_clang::getCurrentId()));
             },
             $content,
         );
