@@ -14,6 +14,7 @@ class Extensions
             \rex_extension::register('GRAPHQL_SLICE_VALUES', [self::class, 'ext__replaceInterLinks']);
             \rex_extension::register('MEDIA_MANAGER_URL', [self::class, 'ext__rewriteMediaUrl'], \rex_extension::LATE);
             \rex_extension::register('MEDIA_URL_REWRITE', [self::class, 'ext__rewriteMediaUrl'], \rex_extension::LATE);
+            \rex_extension::register('YREWRITE_CANONICAL_URL', [self::class, 'ext__rewriteArticleUrl'], \rex_extension::LATE);
             \rex_extension::register('URL_REWRITE', [self::class, 'ext__rewriteArticleUrl'], \rex_extension::LATE);
         }
     }
@@ -66,7 +67,9 @@ class Extensions
     {
         $subject = $ep->getSubject();
         if (\rex_yrewrite::getCurrentDomain()) {
+            $baseUrl = \rex_yrewrite::getCurrentDomain()->getUrl();
             $basePath = \rex_yrewrite::getCurrentDomain()->getPath();
+            $subject = preg_replace('@^' . preg_quote($baseUrl, '@') . '@', '', $subject);
             return '/' . preg_replace('@^' . preg_quote($basePath, '@') . '@', '', $subject);
         }
         return $subject;
