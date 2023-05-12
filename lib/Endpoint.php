@@ -3,6 +3,8 @@
 namespace GraphQL;
 
 use GraphQL\Error\DebugFlag;
+use GraphQL\Validator\DocumentValidator;
+use GraphQL\Validator\Rules\QueryDepth;
 use rex;
 use rex_extension;
 use rex_extension_point;
@@ -33,6 +35,12 @@ class Endpoint
     {
         $input = $this->readInput();
         $schema = $this->generateSchema();
+
+        $queryDepthRule = new QueryDepth(5);
+        DocumentValidator::addRule($queryDepthRule);
+
+        $queryComplexityRule = new \GraphQL\Validator\Rules\QueryComplexity(75);
+        DocumentValidator::addRule($queryComplexityRule);
 
         return \GraphQL\GraphQL::executeQuery(
             $schema,
