@@ -2,6 +2,11 @@ package: graphql
 author: Kreatif GmbH
 version: '0.0.1'
 
+page:
+    title: GraphQL
+    perm: graphql[]
+    icon: rex-icon fa-sliders
+
 requires:
     php:
         version: '>=8.1, <8.3'

@@ -4,6 +4,7 @@ namespace RexGraphQL\Controller;
 
 use RexGraphQL\Type\Structure\Article;
 use GraphQL\Service\Structure\ArticleService;
+use TheCodingMachine\GraphQLite\Annotations\Logged;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 use TheCodingMachine\GraphQLite\Types\ID;
 
@@ -35,6 +36,7 @@ class ArticleController
      * @return Article
      */
     #[Query]
+    #[Logged]
     public function getArticle(ID $id): Article
     {
         return $this->service->getArticleById($id->val());
@@ -47,6 +49,7 @@ class ArticleController
      * @return Article
      */
     #[Query]
+    #[Logged]
     public function getArticleByPath(string $path): Article
     {
         return $this->service->getArticleByPath($path);
@@ -58,6 +61,7 @@ class ArticleController
      * @return Article
      */
     #[Query]
+    #[Logged]
     public function getSiteStartArticle(): Article
     {
         return $this->service->getSiteStartArticle();

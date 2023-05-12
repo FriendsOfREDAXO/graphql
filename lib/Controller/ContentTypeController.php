@@ -4,6 +4,7 @@ namespace RexGraphQL\Controller;
 
 use GraphQL\Service\Structure\ContentTypeService;
 use RexGraphQL\Type\Structure\ContentType;
+use TheCodingMachine\GraphQLite\Annotations\Logged;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 
 class ContentTypeController
@@ -16,6 +17,7 @@ class ContentTypeController
     }
 
     #[Query]
+    #[Logged]
     public function getContentTypeByPath(string $path): ContentType
     {
         return $this->service->getContentTypeByPath($path);

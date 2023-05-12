@@ -4,6 +4,7 @@ namespace RexGraphQL\Controller;
 
 use RexGraphQL\Type\Sprog\WildCard;
 use GraphQL\Service\Sprog\WildCardService;
+use TheCodingMachine\GraphQLite\Annotations\Logged;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 
 class SprogController
@@ -22,6 +23,7 @@ class SprogController
      * @return WildCard[]
      */
     #[Query]
+    #[Logged]
     public function getWildCards(): array
     {
         return $this->wildCardService->getAllWildCards();
