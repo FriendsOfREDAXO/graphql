@@ -39,7 +39,7 @@ class Endpoint
         $queryDepthRule = new QueryDepth(11);
         DocumentValidator::addRule($queryDepthRule);
 
-        $queryComplexityRule = new \GraphQL\Validator\Rules\QueryComplexity(150);
+        $queryComplexityRule = new \GraphQL\Validator\Rules\QueryComplexity(200);
         DocumentValidator::addRule($queryComplexityRule);
 
         return \GraphQL\GraphQL::executeQuery(
