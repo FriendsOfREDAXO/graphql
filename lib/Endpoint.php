@@ -36,7 +36,7 @@ class Endpoint
         $input = $this->readInput();
         $schema = $this->generateSchema();
 
-        $queryDepthRule = new QueryDepth(5);
+        $queryDepthRule = new QueryDepth(11);
         DocumentValidator::addRule($queryDepthRule);
 
         $queryComplexityRule = new \GraphQL\Validator\Rules\QueryComplexity(150);
