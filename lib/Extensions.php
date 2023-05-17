@@ -72,7 +72,7 @@ class Extensions
     public static function ext__rewriteArticleUrl(\rex_extension_point $ep)
     {
         $subject = $ep->getSubject();
-        $subject = preg_replace('@^http://@', '', $subject);
+        $subject = preg_replace('@^http(s)?://@', '', $subject);
         if (\rex_yrewrite::getCurrentDomain()) {
             $baseUrl = \rex_yrewrite::getCurrentDomain()->getUrl();
             $basePath = \rex_yrewrite::getCurrentDomain()->getPath();
