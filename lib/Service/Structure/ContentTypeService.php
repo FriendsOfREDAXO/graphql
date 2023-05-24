@@ -37,7 +37,9 @@ class ContentTypeService
         }
         if (rex_addon::exists('url') && rex_addon::get('url')->isAvailable()) {
             try {
-                $urlObject = UrlManager::resolveUrl(new Url($path));
+                $basePath = \rex_yrewrite::getCurrentDomain()->getPath();
+                $resolvablePath = rtrim($basePath, '/') . '/' . ltrim($path, '/');
+                $urlObject = UrlManager::resolveUrl(new Url($resolvablePath));
                 rex::setProperty('url_object', $urlObject);
                 if ($urlObject) {
                     return new ContentType($urlObject->getProfile()->getNamespace(), $urlObject->getClangId(), new ID($urlObject->getArticleId()));
