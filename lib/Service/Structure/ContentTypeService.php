@@ -42,7 +42,7 @@ class ContentTypeService
                 $urlObject = UrlManager::resolveUrl(new Url($resolvablePath));
                 rex::setProperty('url_object', $urlObject);
                 if ($urlObject) {
-                    return new ContentType($urlObject->getProfile()->getNamespace(), $urlObject->getClangId(), new ID($urlObject->getArticleId()));
+                    return new ContentType($urlObject->getProfile()->getNamespace(), $urlObject->getClangId(), new ID($urlObject->getDatasetId()));
                 }
             } catch (\Exception $e) {}
         }
