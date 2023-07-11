@@ -40,6 +40,12 @@ class Article
     }
 
     #[Field]
+    public function isSiteStartArticle(): bool
+    {
+        return $this->article->isSiteStartArticle();
+    }
+
+    #[Field]
     public function isOnline(): bool
     {
         return $this->article->isOnline();
