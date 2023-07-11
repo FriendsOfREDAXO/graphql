@@ -70,15 +70,6 @@ class Article
     }
 
     /**
-     * @return Breadcrumb[]
-     */
-    #[Field]
-    public function getBreadcrumbs(): array
-    {
-        return Breadcrumb::getAllForArticle($this->article);
-    }
-
-    /**
      * @throws GraphQLException if some slices are not online
      * @return ArticleSlice[]
      */
