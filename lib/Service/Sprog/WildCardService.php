@@ -21,4 +21,13 @@ class WildCardService
         }, $data);
     }
 
+    public function getWildCard(string $key): ?WildCard
+    {
+        $replace = \Wildcard::get($key);
+        if(!$replace) {
+            return null;
+        }
+        return new WildCard($key, $replace, \rex_clang::getCurrentId());
+    }
+
 }

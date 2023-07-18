@@ -29,4 +29,13 @@ class SprogController
         return $this->wildCardService->getAllWildCards();
     }
 
+    /**
+     * Get wildcard by key
+     */
+    #[Query]
+    public function getWildCard(string $key): ?WildCard
+    {
+        return $this->wildCardService->getWildCard($key);
+    }
+
 }
