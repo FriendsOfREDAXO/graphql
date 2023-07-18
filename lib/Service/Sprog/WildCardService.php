@@ -24,10 +24,11 @@ class WildCardService
     public function getWildCard(string $key): ?WildCard
     {
         $data = \rex_sql::factory()->getArray(
-            'SELECT * FROM '.\rex::getTablePrefix().'sprog_wildcard WHERE clang_id = :clangId AND replace = :replace',
+            'SELECT * FROM '.\rex::getTablePrefix().'sprog_wildcard WHERE clang_id = :clangId AND wildcard = :wildcard',
             [
                 'clangId' => \rex_clang::getCurrentId(),
-                'replace' => $key,
+                'wildcard' => $key,
+
             ]
         );
         $item = $data[0] ?? null;
