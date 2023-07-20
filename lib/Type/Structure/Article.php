@@ -34,6 +34,12 @@ class Article
     }
 
     #[Field]
+    public function getLink(): Link
+    {
+        return Link::getByArticle($this->article);
+    }
+
+    #[Field]
     public function isStartArticle(): bool
     {
         return $this->article->isStartArticle();
