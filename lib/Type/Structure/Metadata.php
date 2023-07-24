@@ -27,9 +27,8 @@ class Metadata
     private ?int $createdAt;
     private ?int $updatedAt;
     public ?string $type = 'article';
-    public ?rex_article $article;
 
-    public function __construct(string $title = null, string $description = null, string $robots = null, string $canonical = null, string $image = null, ?int $createdAt = null, ?int $updatedAt = null, rex_article $article = null)
+    public function __construct(string $title = null, string $description = null, string $robots = null, string $canonical = null, string $image = null, ?int $createdAt = null, ?int $updatedAt = null)
     {
         $this->title = $title;
         $this->description = $description;
@@ -38,7 +37,6 @@ class Metadata
         $this->image = $image;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
-        $this->article = $article;
     }
 
     #[Field]
@@ -129,7 +127,6 @@ class Metadata
             $seo->getImage(),
             $article->getCreateDate(),
             $article->getUpdateDate(),
-            $article,
         );
         $item->type = 'article';
         return $item;
