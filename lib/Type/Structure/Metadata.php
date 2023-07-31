@@ -151,12 +151,16 @@ class Metadata
         $title = str_replace('%T', $urlObject->getSeoTitle(), $title);
         $title = str_replace('%SN', rex::getServerName(), $title);
 
+        $image = $urlObject->getSeoImage();
+        if($image) {
+            $image = explode(',', $image)[0];
+        }
         $item = new self(
             $title,
             $urlObject->getSeoDescription(),
             'index, follow',
             '',
-            $urlObject->getSeoImage(),
+            $image,
             $createdAt,
             $updatedAt,
         );
