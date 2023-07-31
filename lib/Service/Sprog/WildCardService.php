@@ -17,6 +17,7 @@ class WildCardService
         );
 
         return array_map(function ($item) {
+            $item['wildcard'] = str_replace('"', '\"', $item['wildcard']);
             return new WildCard($item['id'], $item['wildcard'], $item['replace'], \rex_clang::getCurrentId());
         }, $data);
     }
@@ -35,6 +36,7 @@ class WildCardService
         if(!$item) {
             return null;
         }
+        $item['wildcard'] = str_replace('"', '\"', $item['wildcard']);
         return new WildCard($item['id'], $item['wildcard'], $item['replace'], \rex_clang::getCurrentId());
     }
 
