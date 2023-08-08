@@ -30,17 +30,4 @@ class NavigationController
         return $this->service->getRootNavigation($depth, $articleId?->val());
     }
 
-    /**
-     * Get navigation by name
-     *
-     * @return NavigationItem[]
-     * @throws GraphQLException
-     */
-    #[Query]
-    #[Logged]
-    public function getNavigation(string $name, ?ID $articleId): array
-    {
-        return $this->service->getNavigationByName($name, $articleId?->val());
-    }
-
 }

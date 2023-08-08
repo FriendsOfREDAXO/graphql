@@ -27,7 +27,7 @@ class NavigationItem
         $this->internal = $internal;
     }
 
-    public static function getByNavbuilderItem(array $item, ?int $parentId, int $articleId): self
+    public static function getByArray(array $item, ?int $parentId, int $articleId): self
     {
         $active = false;
         if ($item['type'] === 'intern') {

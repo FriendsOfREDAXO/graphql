@@ -1,8 +1,9 @@
 <?php
 
-namespace GraphQL\Service\Sprog;
+namespace RexGraphQL\Connector\Sprog\Service;
 
-use RexGraphQL\Type\Sprog\WildCard;
+
+use RexGraphQL\Connector\Sprog\Type\WildCard;
 
 class WildCardService
 {

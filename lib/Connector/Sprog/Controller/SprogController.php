@@ -1,9 +1,9 @@
 <?php
 
-namespace RexGraphQL\Controller;
+namespace RexGraphQL\Connector\Sprog\Controller;
 
-use RexGraphQL\Type\Sprog\WildCard;
-use GraphQL\Service\Sprog\WildCardService;
+use RexGraphQL\Connector\Sprog\Service\WildCardService;
+use RexGraphQL\Connector\Sprog\Type\WildCard;
 use TheCodingMachine\GraphQLite\Annotations\Logged;
 use TheCodingMachine\GraphQLite\Annotations\Query;
 

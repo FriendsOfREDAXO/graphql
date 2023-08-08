@@ -1,6 +1,6 @@
 <?php
 
-namespace RexGraphQL\Type\Sprog;
+namespace RexGraphQL\Connector\Sprog\Type;
 
 use RexGraphQL\Type\Structure\Clang;
 use TheCodingMachine\GraphQLite\Annotations\Field;
