@@ -2,6 +2,8 @@
 
 namespace GraphQL;
 
+use RexGraphQL\Connector\Connector;
+
 class Extensions
 {
     public static function init()
@@ -16,6 +18,7 @@ class Extensions
             \rex_extension::register('MEDIA_URL_REWRITE', [self::class, 'ext__rewriteMediaUrl'], \rex_extension::LATE);
             \rex_extension::register('YREWRITE_CANONICAL_URL', [self::class, 'ext__rewriteArticleUrl'], \rex_extension::LATE);
             \rex_extension::register('URL_REWRITE', [self::class, 'ext__rewriteArticleUrl'], \rex_extension::LATE);
+            Connector::init();
         }
     }
 
@@ -50,6 +53,22 @@ class Extensions
             }
             Endpoint::registerEndpoint();
         }
+    }
+
+    public static function ext__addTypeNamespaces(\rex_extension_point $ep) {
+        $subject = $ep->getSubject();
+        if(\rex_addon::exists('sprog') && \rex_addon::get('sprog')->isAvailable()) {
+            $subject[] = '\\RexGraphQL\\Sprog\\Type';
+        }
+        return $subject;
+    }
+
+    public static function ext__addControllerNamespaces(\rex_extension_point $ep) {
+        $subject = $ep->getSubject();
+        if(\rex_addon::exists('sprog') && \rex_addon::get('sprog')->isAvailable()) {
+            $subject[] = '\\RexGraphQL\\Sprog\\Controller';
+        }
+        return $subject;
     }
 
     public static function ext__rewriteMediaUrl(\rex_extension_point $ep)
