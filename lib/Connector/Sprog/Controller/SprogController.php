@@ -30,6 +30,16 @@ class SprogController
     }
 
     /**
+     * @param string[] $keys
+     * @return WildCard[]
+     */
+    #[Query]
+    public function getSelectedWildCards(array $keys): array
+    {
+        return $this->wildCardService->getSelectedWildCards($keys);
+    }
+
+    /**
      * Get wildcard by key
      */
     #[Query]

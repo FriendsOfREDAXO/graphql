@@ -47,4 +47,10 @@ class WildCard
         return Clang::getById($this->clangId);
     }
 
+    public static function getFromArray(array $wildcard): Wildcard
+    {
+        $wildcard['wildcard'] = str_replace('"', '\"', $wildcard['wildcard']);
+        return new WildCard($wildcard['id'], $wildcard['wildcard'], $wildcard['replace'], \rex_clang::getCurrentId());
+    }
+
 }
