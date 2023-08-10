@@ -1,12 +1,14 @@
 <?php
 
 use RexGraphQL\Auth\SharedSecretAuthenticationService;
+use RexGraphQL\RexGraphQL;
 
 echo rex_view::title($this->getProperty('page')['title']);
 
 if (rex_post('settings', 'array')) {
     $this->setConfig(rex_post('settings', [
         [SharedSecretAuthenticationService::SHARED_SECRET_CONFIG_KEY, 'string'],
+        [RexGraphQL::MODE_CONFIG_KEY, 'string']
     ]));
 }
 
@@ -17,9 +19,20 @@ $elements['label'] = rex_i18n::msg('graphql.auth_shared_secret');
 
 $textInput = new rex_input_text();
 $textInput->setAttribute('name', 'settings[' . SharedSecretAuthenticationService::SHARED_SECRET_CONFIG_KEY . ']');
-$textInput->setAttribute('value', rex_config::get('graphql', 'auth_shared_secret'));
+$textInput->setAttribute('value', rex_config::get('graphql', SharedSecretAuthenticationService::SHARED_SECRET_CONFIG_KEY));
 $elements['field'] = $textInput->getHtml();
 
+$formElements[] = $elements;
+$elements = [];
+$elements['label'] = rex_i18n::msg('graphql.addon_mode');
+$selectInput = new rex_select();
+$selectInput->addArrayOptions([
+    RexGraphQL::HEADLESS_MODE_KEY => rex_i18n::msg('graphql.headless_mode'),
+    RexGraphQL::ENDPOINT_MODE_KEY => rex_i18n::msg('graphql.endpoint_mode')
+]);
+$selectInput->setName('settings');
+$selectInput->setSelected(rex_config::get('graphql', RexGraphQL::MODE_CONFIG_KEY));
+$elements['field'] = $selectInput->get();
 $formElements[] = $elements;
 
 $fragment = new rex_fragment();

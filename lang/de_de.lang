@@ -1,1 +1,4 @@
 graphql.auth_shared_secret = Geteiltes Passwort für vollen Zugriff
+graphql.headless_mode = Headless: FrontEnd getrennt von REDAXO
+graphql.endpoint_mode = Nur GraphQL Endpoint bereitstellen
+graphql.addon_mode = Modus

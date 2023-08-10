@@ -3,6 +3,7 @@
 namespace GraphQL;
 
 use RexGraphQL\Connector\Connector;
+use RexGraphQL\RexGraphQL;
 
 class Extensions
 {
@@ -14,10 +15,12 @@ class Extensions
         if (\rex::isFrontend()) {
             \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext__initGraphQLEndpoint'], \rex_extension::LATE);
             \rex_extension::register('GRAPHQL_SLICE_VALUES', [self::class, 'ext__replaceInterLinks']);
-            \rex_extension::register('MEDIA_MANAGER_URL', [self::class, 'ext__rewriteMediaUrl'], \rex_extension::LATE);
-            \rex_extension::register('MEDIA_URL_REWRITE', [self::class, 'ext__rewriteMediaUrl'], \rex_extension::LATE);
-            \rex_extension::register('YREWRITE_CANONICAL_URL', [self::class, 'ext__rewriteArticleUrl'], \rex_extension::LATE);
-            \rex_extension::register('URL_REWRITE', [self::class, 'ext__rewriteArticleUrl'], \rex_extension::LATE);
+            if (RexGraphQL::isHeadlessMode()) {
+                \rex_extension::register('MEDIA_MANAGER_URL', [self::class, 'ext__rewriteMediaUrl'], \rex_extension::LATE);
+                \rex_extension::register('MEDIA_URL_REWRITE', [self::class, 'ext__rewriteMediaUrl'], \rex_extension::LATE);
+                \rex_extension::register('YREWRITE_CANONICAL_URL', [self::class, 'ext__rewriteArticleUrl'], \rex_extension::LATE);
+                \rex_extension::register('URL_REWRITE', [self::class, 'ext__rewriteArticleUrl'], \rex_extension::LATE);
+            }
             Connector::init();
         }
     }
@@ -55,17 +58,19 @@ class Extensions
         }
     }
 
-    public static function ext__addTypeNamespaces(\rex_extension_point $ep) {
+    public static function ext__addTypeNamespaces(\rex_extension_point $ep)
+    {
         $subject = $ep->getSubject();
-        if(\rex_addon::exists('sprog') && \rex_addon::get('sprog')->isAvailable()) {
+        if (\rex_addon::exists('sprog') && \rex_addon::get('sprog')->isAvailable()) {
             $subject[] = '\\RexGraphQL\\Sprog\\Type';
         }
         return $subject;
     }
 
-    public static function ext__addControllerNamespaces(\rex_extension_point $ep) {
+    public static function ext__addControllerNamespaces(\rex_extension_point $ep)
+    {
         $subject = $ep->getSubject();
-        if(\rex_addon::exists('sprog') && \rex_addon::get('sprog')->isAvailable()) {
+        if (\rex_addon::exists('sprog') && \rex_addon::get('sprog')->isAvailable()) {
             $subject[] = '\\RexGraphQL\\Sprog\\Controller';
         }
         return $subject;
