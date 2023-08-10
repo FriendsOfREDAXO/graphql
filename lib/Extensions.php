@@ -10,7 +10,10 @@ class Extensions
     public static function init()
     {
         if (\rex::isBackend()) {
-            \rex_extension::register('OUTPUT_FILTER', [self::class, 'ext__interceptBackendArticleLink']);
+            if (RexGraphQL::isHeadlessMode()) {
+                \rex_extension::register('OUTPUT_FILTER', [self::class, 'ext__interceptBackendArticleLink']);
+                \rex_extension::register('SLICE_SHOW', [self::class, 'ext__createModulePreview'], \rex_extension::EARLY);
+            }
         }
         if (\rex::isFrontend()) {
             \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext__initGraphQLEndpoint'], \rex_extension::LATE);
@@ -58,24 +61,6 @@ class Extensions
         }
     }
 
-    public static function ext__addTypeNamespaces(\rex_extension_point $ep)
-    {
-        $subject = $ep->getSubject();
-        if (\rex_addon::exists('sprog') && \rex_addon::get('sprog')->isAvailable()) {
-            $subject[] = '\\RexGraphQL\\Sprog\\Type';
-        }
-        return $subject;
-    }
-
-    public static function ext__addControllerNamespaces(\rex_extension_point $ep)
-    {
-        $subject = $ep->getSubject();
-        if (\rex_addon::exists('sprog') && \rex_addon::get('sprog')->isAvailable()) {
-            $subject[] = '\\RexGraphQL\\Sprog\\Controller';
-        }
-        return $subject;
-    }
-
     public static function ext__rewriteMediaUrl(\rex_extension_point $ep)
     {
         $subject = $ep->getSubject();
@@ -116,5 +101,16 @@ class Extensions
             },
             $content,
         );
+    }
+
+    public static function ext__createModulePreview(\rex_extension_point $ep): string
+    {
+        $sliceId = $ep->getParam('slice_id');
+        $clangId = $ep->getParam('clang');
+        $fragment = new \rex_fragment();
+        $fragment->setVar('slice_id', $sliceId);
+        $fragment->setVar('clang_id', $clangId);
+        $preview = $fragment->parse('graphql/headless_module_preview.php');
+        return preg_replace('@</header>\s*</div>@', '</header>' . $preview . '</div>', $ep->getSubject());
     }
 }

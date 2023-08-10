@@ -30,7 +30,7 @@ $selectInput->addArrayOptions([
     RexGraphQL::HEADLESS_MODE_KEY => rex_i18n::msg('graphql.headless_mode'),
     RexGraphQL::ENDPOINT_MODE_KEY => rex_i18n::msg('graphql.endpoint_mode')
 ]);
-$selectInput->setName('settings');
+$selectInput->setName('settings['. RexGraphQL::MODE_CONFIG_KEY . ']');
 $selectInput->setSelected(rex_config::get('graphql', RexGraphQL::MODE_CONFIG_KEY));
 $elements['field'] = $selectInput->get();
 $formElements[] = $elements;
