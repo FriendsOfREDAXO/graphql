@@ -1,9 +1,10 @@
 <?php
 
-namespace RexGraphQL\Auth;
+namespace GraphQL\Service\Auth;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use PHPMailer\PHPMailer\Exception;
 
 class JwtService
 {
@@ -16,12 +17,17 @@ class JwtService
             return false;
         }
         $key = new Key($key, self::KEY_ALGORITHM);
-        $token = JWT::decode($token, $key);
-        if($token->userId > 0) {
-            $user = \rex_user::get($token->userId);
-            \rex::setProperty('user', $user);
-            return true;
+        try {
+            $token = JWT::decode($token, $key);
+            if($token->userId > 0) {
+                $user = \rex_user::get($token->userId);
+                \rex::setProperty('user', $user);
+                return true;
+            }
+        } catch (\DomainException|\UnexpectedValueException $exception) {
+            return false;
         }
+
         return false;
     }
 
@@ -35,7 +41,7 @@ class JwtService
         $key = $this->getKey();
         if($user && $key) {
             $payload = [
-                'userId' => $user->getId()
+                'userId' => $user->getId(),
             ];
             return JWT::encode($payload, $key, self::KEY_ALGORITHM);
         }

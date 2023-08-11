@@ -1,7 +1,8 @@
 <?php
 
-namespace RexGraphQL\Auth;
+namespace GraphQL\Service\Auth;
 use TheCodingMachine\GraphQLite\Security\AuthenticationServiceInterface;
+
 
 class AuthService implements AuthenticationServiceInterface
 {
@@ -19,11 +20,11 @@ class AuthService implements AuthenticationServiceInterface
     public function isLogged(): bool
     {
         $secret = \rex_addon::get('graphql')->getConfig(self::SHARED_SECRET_CONFIG_KEY);
-        $bearerToken = static::parseBearerToken();
+        $bearerToken = static::getBearerToken();
         if(!$bearerToken && $secret) {
             return false;
         }
-        if(($bearerToken && $this->jwtService->validateToken($bearerToken)) || !$secret) {
+        if($this->isRedaxoLoggedIn() || !$secret) {
             return true;
         }
         return $bearerToken === $secret;
@@ -34,7 +35,13 @@ class AuthService implements AuthenticationServiceInterface
         return null;
     }
 
-    private static function parseBearerToken(): ?string
+    public function isRedaxoLoggedIn(): bool
+    {
+        $bearerToken = self::getBearerToken();
+        return $bearerToken && $this->jwtService->validateToken($bearerToken);
+    }
+
+    public static function getBearerToken(): ?string
     {
         $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
         if (null === $authHeader) {

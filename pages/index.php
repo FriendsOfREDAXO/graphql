@@ -1,7 +1,7 @@
 <?php
 
-use RexGraphQL\Auth\AuthService;
-use RexGraphQL\Auth\JwtService;
+use GraphQL\Service\Auth\AuthService;
+use GraphQL\Service\Auth\JwtService;
 use RexGraphQL\RexGraphQL;
 
 echo rex_view::title($this->getProperty('page')['title']);

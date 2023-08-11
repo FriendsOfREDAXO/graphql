@@ -2,8 +2,8 @@
 
 namespace GraphQL;
 
-use RexGraphQL\Auth\AuthService;
-use RexGraphQL\Auth\JwtService;
+use GraphQL\Service\Auth\AuthService;
+use GraphQL\Service\Auth\JwtService;
 use RexGraphQL\Connector\Connector;
 use RexGraphQL\RexGraphQL;
 

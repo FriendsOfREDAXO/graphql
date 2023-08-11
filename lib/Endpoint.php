@@ -3,6 +3,7 @@
 namespace GraphQL;
 
 use GraphQL\Error\DebugFlag;
+use GraphQL\Service\Auth\AuthService;
 use GraphQL\Validator\DocumentValidator;
 use GraphQL\Validator\Rules\QueryDepth;
 use rex;
@@ -10,14 +11,12 @@ use rex_extension;
 use rex_extension_point;
 use rex_response;
 use rex_var;
-use RexGraphQL\Auth\AuthService;
 use Symfony\Component\DependencyInjection\Container;
 use TheCodingMachine\GraphQLite\Context\Context;
 use TheCodingMachine\GraphQLite\Exceptions\WebonyxErrorHandler;
 use TheCodingMachine\GraphQLite\Schema;
 use TheCodingMachine\GraphQLite\SchemaFactory;
 use Yiisoft\Cache\ArrayCache;
-
 use function is_array;
 
 class Endpoint
