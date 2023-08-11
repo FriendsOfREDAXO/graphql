@@ -67,10 +67,13 @@ class ContentType
         }
         if ('article' === $this->type) {
             foreach (rex_clang::getAll(1) as $_clang) {
-                $clang = Clang::getById($_clang->getId());
-                $clang->url = rex_getUrl($this->elementId->val(), $_clang->getId());
-                $clang->isActive = rex_clang::getCurrentId() === $_clang->getId();
-                $clangs[] = $clang;
+                $article = \rex_article::get($this->elementId->val(), $_clang->getId());
+                if($article && $article->isOnline()) {
+                    $clang = Clang::getById($_clang->getId());
+                    $clang->url = rex_getUrl($this->elementId->val(), $_clang->getId());
+                    $clang->isActive = rex_clang::getCurrentId() === $_clang->getId();
+                    $clangs[] = $clang;
+                }
             }
         } else {
             /** @var UrlManager $urlObject */
