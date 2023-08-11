@@ -4,8 +4,10 @@ namespace RexGraphQL\Controller;
 
 use GraphQL\Service\Structure\ContentTypeService;
 use RexGraphQL\Type\Structure\ContentType;
+use RexGraphQL\Type\Structure\Forward;
 use TheCodingMachine\GraphQLite\Annotations\Logged;
 use TheCodingMachine\GraphQLite\Annotations\Query;
+use TheCodingMachine\GraphQLite\Types\ID;
 
 class ContentTypeController
 {
@@ -21,5 +23,12 @@ class ContentTypeController
     public function getContentTypeByPath(string $path): ContentType
     {
         return $this->service->getContentTypeByPath($path);
+    }
+
+    #[Query]
+    #[Logged]
+    public function getForward(ID $id): Forward
+    {
+        return $this->service->getForward($id->val());
     }
 }

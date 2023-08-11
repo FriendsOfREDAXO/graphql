@@ -41,10 +41,13 @@ class ContentType
      * @throws GraphQLException
      */
     #[Field]
-    public function getMetadata(): Metadata
+    public function getMetadata(): ?Metadata
     {
         if ('article' === $this->type) {
             return Metadata::getByArticleId($this->elementId->val(), $this->clangId);
+        }
+        if('forward' === $this->type) {
+            return null;
         }
         return Metadata::getByUrlObject();
     }
@@ -57,6 +60,9 @@ class ContentType
     public function getClangs(): array
     {
         $clangs = [];
+        if('forward' === $this->type) {
+            return [];
+        }
         if ('article' === $this->type) {
             foreach (rex_clang::getAll(1) as $_clang) {
                 $clang = Clang::getById($_clang->getId());
