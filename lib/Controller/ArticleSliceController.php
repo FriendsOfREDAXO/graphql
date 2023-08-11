@@ -18,18 +18,6 @@ class ArticleSliceController
     }
 
     /**
-     * Get article slices by article id
-     *
-     * @return ArticleSlice[]
-     */
-    #[Query]
-    #[Logged]
-    public function getArticleSlices(ID $articleId): array
-    {
-        return $this->service->getSlicesByArticleId($articleId->val());
-    }
-
-    /**
      * Get article slice by id
      *
      */

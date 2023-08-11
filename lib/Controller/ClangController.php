@@ -6,6 +6,7 @@ use RexGraphQL\Type\Structure\Clang;
 use GraphQL\Service\Structure\ClangService;
 use TheCodingMachine\GraphQLite\Annotations\Logged;
 use TheCodingMachine\GraphQLite\Annotations\Query;
+use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;
 use TheCodingMachine\GraphQLite\Types\ID;
 
 class ClangController
@@ -22,6 +23,7 @@ class ClangController
      * Get all available languages for an article
      *
      * @return Clang[]
+     * @throws GraphQLException
      */
     #[Query]
     #[Logged]

@@ -66,9 +66,9 @@ class ContentType
             return [$clang];
         }
         if ('article' === $this->type) {
-            foreach (rex_clang::getAll(1) as $_clang) {
+            foreach (rex_clang::getAll(\rex::getUser() == null) as $_clang) {
                 $article = \rex_article::get($this->elementId->val(), $_clang->getId());
-                if($article && $article->isOnline()) {
+                if($article && ($article->isOnline() || rex::getUser())) {
                     $clang = Clang::getById($_clang->getId());
                     $clang->url = rex_getUrl($this->elementId->val(), $_clang->getId());
                     $clang->isActive = rex_clang::getCurrentId() === $_clang->getId();
@@ -78,7 +78,7 @@ class ContentType
         } else {
             /** @var UrlManager $urlObject */
             $urlObject = rex::getProperty('url_object');
-            $urlObjects = $urlObject->getHreflang(rex_clang::getAllIds(1));
+            $urlObjects = $urlObject->getHreflang(rex_clang::getAllIds(\rex::getUser() == null));
             foreach ($urlObjects as $_urlObject) {
                 $clang = Clang::getById($_urlObject->getClangId());
                 $clang->url = $_urlObject->getUrl()->getPath();

@@ -90,6 +90,12 @@ class ArticleSlice
         });
     }
 
+    #[Field]
+    public function isOnline(): bool
+    {
+        return $this->slice->isOnline();
+    }
+
     /**
      * @param callable $callback function to get value
      * @param int      $count    max number of values
@@ -120,7 +126,7 @@ class ArticleSlice
     {
         $s = new self();
         $s->slice = rex_article_slice::getArticleSliceById($id);
-        if (!$s->slice->isOnline()) {
+        if (!$s->slice->isOnline() && !\rex::getUser()) {
             throw new Exception("Slice with id {$s->slice->getId()} is not online");
         }
         return $s;
@@ -136,7 +142,7 @@ class ArticleSlice
     {
         $s = new self();
         $s->slice = $obj;
-        if (!$s->slice->isOnline()) {
+        if (!$s->slice->isOnline() && !\rex::getUser()) {
             throw new GraphQLException("Slice with id {$s->slice->getId()} is not online");
         }
         return $s;

@@ -10,7 +10,7 @@ use rex_extension;
 use rex_extension_point;
 use rex_response;
 use rex_var;
-use RexGraphQL\Auth\SharedSecretAuthenticationService;
+use RexGraphQL\Auth\AuthService;
 use Symfony\Component\DependencyInjection\Container;
 use TheCodingMachine\GraphQLite\Context\Context;
 use TheCodingMachine\GraphQLite\Exceptions\WebonyxErrorHandler;
@@ -62,7 +62,7 @@ class Endpoint
         } else {
             $this->schemaFactory->prodMode();
         }
-        $this->schemaFactory->setAuthenticationService(new SharedSecretAuthenticationService());
+        $this->schemaFactory->setAuthenticationService(new AuthService());
         return $this->schemaFactory->createSchema();
     }
 

@@ -18,7 +18,7 @@ class ArticleService
         if($contentType->getType() == 'article') {
             return Article::getById($contentType->getElementId()->val());
         }
-        return Article::getById(\rex_yrewrite::getCurrentDomain()->getNotfoundId());
+        return Article::getById(\rex_article::getNotfoundArticleId());
     }
 
     public function getRootArticles(): array

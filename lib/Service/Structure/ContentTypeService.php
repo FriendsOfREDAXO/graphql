@@ -54,7 +54,8 @@ class ContentTypeService
         );
         $resolver->resolve($path);
         $id = $structureAddon->getProperty('article_id');
-        if ($id !== rex_yrewrite::getCurrentDomain()->getNotfoundId()) {
+        $notFoundId = rex_yrewrite::getCurrentDomain()->getNotfoundId();
+        if ($id != $notFoundId) {
             return new ContentType('article', rex_clang::getCurrentId(), new ID($id));
         }
         return null;

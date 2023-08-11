@@ -61,6 +61,12 @@ class Category
         }, $articles);
     }
 
+    #[Field]
+    public function isOnline(): bool
+    {
+        return $this->category->isOnline();
+    }
+
     /**
      * @param int $id id of \rex_category
      *
@@ -75,7 +81,7 @@ class Category
             throw new GraphQLException("Category with id $id not found");
         }
         $c->category = $category;
-        if (!$c->category->isOnline()) {
+        if (!$c->category->isOnline() && !\rex::getUser()) {
             throw new GraphQLException("Category with id {$c->category->getId()} is not online");
         }
         return $c;
@@ -91,7 +97,7 @@ class Category
     {
         $c = new self();
         $c->category = $obj;
-        if (!$c->category->isOnline()) {
+        if (!$c->category->isOnline() && !\rex::getUser()) {
             throw new GraphQLException("Category with id {$c->category->getId()} is not online");
         }
         return $c;

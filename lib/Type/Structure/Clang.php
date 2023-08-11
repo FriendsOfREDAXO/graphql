@@ -47,6 +47,12 @@ class Clang
     }
 
     #[Field]
+    public function isOnline(): bool
+    {
+        return $this->clang->isOnline();
+    }
+
+    #[Field]
     public function getUrl(): ?string
     {
         return $this->url;
@@ -65,7 +71,7 @@ class Clang
         if (!$lang) {
             throw new GraphQLException("CLang with id $id not found");
         }
-        if(!$lang->isOnline()) {
+        if(!$lang->isOnline() && !\rex::getUser()) {
             throw new GraphQLException("Clang with id {$lang->getId()} is not online");
         }
         $clang->clang = $lang;
@@ -82,7 +88,7 @@ class Clang
     {
         $clang = new self();
         $clang->clang = $obj;
-        if(!$obj->isOnline()) {
+        if(!$obj->isOnline() && !\rex::getUser()) {
             throw new GraphQLException("Clang with id {$obj->getId()} is not online");
         }
         return $clang;

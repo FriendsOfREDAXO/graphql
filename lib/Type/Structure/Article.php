@@ -82,10 +82,7 @@ class Article
     #[Field]
     public function getSlices(): array
     {
-        $slices = rex_article_slice::getSlicesForArticle($this->article->getId());
-        $slices = array_filter($slices, static function ($slice) {
-            return $slice->isOnline();
-        });
+        $slices = rex_article_slice::getSlicesForArticle($this->article->getId(), false, 0, \rex::getUser() == null);
         return array_map(static function ($slice) {
             return ArticleSlice::getByObject($slice);
         }, $slices);
@@ -112,7 +109,7 @@ class Article
     {
         $a = new self();
         $article = rex_article::get($id);
-        if (!$article || !$article->isOnline()) {
+        if(!$article || (!$article->isOnline() && !\rex::getUser())) {
             $article = rex_article::getNotfoundArticle();
         }
         $a->article = $article;
@@ -127,7 +124,7 @@ class Article
     public static function getByObject(rex_article $obj): self
     {
         $a = new self();
-        if (!$obj->isOnline()) {
+        if(!$obj->isOnline() && !\rex::getUser()) {
             $obj = rex_article::getNotfoundArticle();
         }
         $a->article = $obj;

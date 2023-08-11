@@ -20,10 +20,10 @@ class ClangService
         if (!$articleId) {
             throw new GraphQLException('Could not determine current article');
         }
-        $clangs = \rex_clang::getAll(1);
+        $clangs = \rex_clang::getAll(\rex::getUser() == null);
         $clangs = array_filter($clangs, function ($clang) use ($articleId) {
             $article = \rex_article::get($articleId, $clang->getId());
-            return $article && $article->isOnline();
+            return $article && ($article->isOnline() || \rex::getUser());
         });
         return array_map(function ($clang) use ($articleId) {
             $lang = Clang::getByObject($clang);

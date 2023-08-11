@@ -4,6 +4,7 @@
         "yiisoft/cache": "^1.0",
         "thecodingmachine/graphqlite-symfony-validator-bridge": "6.0.x-dev",
         "symfony/dependency-injection": "^6.1",
-        "myclabs/php-enum": "^1.8"
+        "myclabs/php-enum": "^1.8",
+        "firebase/php-jwt": "^6.8"
     }
 }
