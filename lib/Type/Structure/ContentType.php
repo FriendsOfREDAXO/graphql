@@ -61,7 +61,9 @@ class ContentType
     {
         $clangs = [];
         if('forward' === $this->type) {
-            return [];
+            $clang = Clang::getById($this->clangId);
+            $clang->isActive = true;
+            return [$clang];
         }
         if ('article' === $this->type) {
             foreach (rex_clang::getAll(1) as $_clang) {

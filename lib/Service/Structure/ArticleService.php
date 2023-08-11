@@ -6,26 +6,19 @@ use RexGraphQL\Type\Structure\Article;
 
 class ArticleService
 {
+    private ContentTypeService $contentTypeService;
+    public function __construct()
+    {
+        $this->contentTypeService = new ContentTypeService();
+    }
 
     public function getArticleByPath(string $path): Article
     {
-        if (substr($path, 0, 1) !== '/') {
-            $path = '/'.$path;
+        $contentType = $this->contentTypeService->getContentTypeByPath($path);
+        if($contentType == 'article') {
+            return Article::getById($contentType->getElementId()->val());
         }
-        if (substr($path, -1) !== '/') {
-            $path = $path.'/';
-        }
-        $structureAddon = \rex_addon::get('structure');
-        $resolver = new \rex_yrewrite_path_resolver(
-            \rex_yrewrite::getDomains(),
-            [],
-            [],
-            \rex_yrewrite::$paths['paths'] ?? [],
-            \rex_yrewrite::$paths['redirections'] ?? []
-        );
-        $resolver->resolve($path);
-        $id = $structureAddon->getProperty('article_id');
-        return Article::getById($id);
+        return Article::getById(\rex_yrewrite::getCurrentDomain()->getNotfoundId());
     }
 
     public function getRootArticles(): array
