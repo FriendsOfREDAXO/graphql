@@ -19,7 +19,7 @@ $image = $slice->getMedia(1);
         <?php
         $fragment = new \rex_fragment();
         $fragment->setVar('values', $mblock[0], false);
-        $fragment->setVar('image', $mblock['REX_MEDIA_1'], false);
+        $fragment->setVar('image', $mblock[0]['REX_MEDIA_1'], false);
         echo $fragment->parse('graphql/preview/image_text.php');
         ?>
     <?php endif; ?>
