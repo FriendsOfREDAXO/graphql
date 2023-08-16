@@ -11,14 +11,16 @@ class NavigationService
     /**
      * @return NavigationItem[]
      */
-    public function getRootNavigation(int $depth, ?int $articleId): array
+    public function getRootNavigation(int $depth, bool $includeHome, ?int $articleId): array
     {
         $navigation = [];
         $articleId = $articleId ?? \rex_article::getCurrentId();
-        $siteStartArticle = \rex_article::getSiteStartArticle();
-        $startNavItem = NavigationItem::getByArticle($siteStartArticle, $articleId);
-        if ($startNavItem) {
-            $navigation[] = $startNavItem;
+        if($includeHome) {
+            $siteStartArticle = \rex_article::getSiteStartArticle();
+            $startNavItem = NavigationItem::getByArticle($siteStartArticle, $articleId);
+            if ($startNavItem) {
+                $navigation[] = $startNavItem;
+            }
         }
         $rootCategories = \rex_category::getRootCategories(true);
         foreach ($rootCategories as $rootCategory) {

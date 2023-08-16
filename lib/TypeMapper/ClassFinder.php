@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace RexGraphQL;
 
 class ClassFinder
 {

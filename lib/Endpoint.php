@@ -1,11 +1,14 @@
 <?php
 
-namespace GraphQL;
+namespace RexGraphQL;
 
 use GraphQL\Error\DebugFlag;
+use GraphQL\GraphQL;
 use GraphQL\Service\Auth\AuthService;
 use GraphQL\Validator\DocumentValidator;
+use GraphQL\Validator\Rules\QueryComplexity;
 use GraphQL\Validator\Rules\QueryDepth;
+use JetBrains\PhpStorm\NoReturn;
 use rex;
 use rex_extension;
 use rex_extension_point;
@@ -38,10 +41,10 @@ class Endpoint
         $queryDepthRule = new QueryDepth(11);
         DocumentValidator::addRule($queryDepthRule);
 
-        $queryComplexityRule = new \GraphQL\Validator\Rules\QueryComplexity(200);
+        $queryComplexityRule = new QueryComplexity(200);
         DocumentValidator::addRule($queryComplexityRule);
 
-        return \GraphQL\GraphQL::executeQuery(
+        return GraphQL::executeQuery(
             $schema,
             $input['query'],
             null,
@@ -54,8 +57,8 @@ class Endpoint
 
     private function generateSchema(): Schema
     {
-        $this->schemaFactory->addQueryProviderFactory(new \GraphQL\RexQueryProviderFactory());
-        $this->schemaFactory->addTypeMapperFactory(new \GraphQL\RexTypeMapperFactory());
+        $this->schemaFactory->addQueryProviderFactory(new RexQueryProviderFactory());
+        $this->schemaFactory->addTypeMapperFactory(new RexTypeMapperFactory());
         if (static::isDebug()) {
             $this->schemaFactory->devMode();
         } else {
@@ -75,14 +78,14 @@ class Endpoint
         return [];
     }
 
-    public static function registerEndpoint(): void
+    #[NoReturn] public static function registerEndpoint(): void
     {
         $endpoint = new self();
         $result = $endpoint->executeQuery();
         static::sendResponse($result);
     }
 
-    private static function sendResponse(array $output): void
+    #[NoReturn] private static function sendResponse(array $output): void
     {
         rex_response::cleanOutputBuffers();
         rex_response::sendCacheControl();

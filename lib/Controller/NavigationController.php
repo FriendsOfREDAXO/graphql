@@ -25,9 +25,9 @@ class NavigationController
      */
     #[Query]
     #[Logged]
-    public function getRootNavigation(int $depth, ?ID $articleId): array
+    public function getRootNavigation(int $depth, bool $includeHome = true, ?ID $articleId = null): array
     {
-        return $this->service->getRootNavigation($depth, $articleId?->val());
+        return $this->service->getRootNavigation($depth, $includeHome, $articleId?->val());
     }
 
 }

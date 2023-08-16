@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace RexGraphQL;
 
 use ReflectionClass;
 use rex_extension;

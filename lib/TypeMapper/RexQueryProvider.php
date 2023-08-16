@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace RexGraphQL;
 
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\ValidatorBuilder;

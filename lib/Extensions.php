@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace RexGraphQL;
 
 use GraphQL\Service\Auth\AuthService;
 use GraphQL\Service\Auth\JwtService;

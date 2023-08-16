@@ -1,6 +1,6 @@
 <?php
 
-use GraphQL\Extensions;
+use RexGraphQL\Extensions;
 
 Extensions::init();
 
