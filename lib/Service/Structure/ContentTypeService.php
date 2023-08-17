@@ -64,6 +64,9 @@ class ContentTypeService
                     break;
                 }
             }
+            if($id) {
+                break;
+            }
         }
         if(!$id) return null;
         $article = \rex_article::get($id);
