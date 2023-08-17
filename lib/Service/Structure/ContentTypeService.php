@@ -61,11 +61,8 @@ class ContentTypeService
                 if($path === rtrim($_path[$clang->getId()], '/')) {
                     $id = $_id;
                     $clangId = $clang->getId();
-                    break;
+                    break 2;
                 }
-            }
-            if($id) {
-                break;
             }
         }
         if(!$id) return null;
