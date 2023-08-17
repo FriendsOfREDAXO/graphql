@@ -46,21 +46,29 @@ class ContentTypeService
         return $this->get404();
     }
 
+    /**
+     * @throws \rex_exception
+     */
     private function checkForArticle(string $path): ?ContentType
     {
-        $structureAddon = rex_addon::get('structure');
-        $resolver = new rex_yrewrite_path_resolver(
-            rex_yrewrite::getDomains(),
-            [],
-            [],
-            rex_yrewrite::$paths['paths'] ?? [],
-            [],
-        );
-        $resolver->resolve($path);
-        $id = $structureAddon->getProperty('article_id');
+        $paths = rex_yrewrite::$paths['paths']['default'];
+        $path = trim($path, '/');
+        $id = null;
+        $clangId = null;
+        $clangs = rex_clang::getAll();
+        foreach($paths as $_id => $_path) {
+            foreach($clangs as $clang) {
+                if($path === rtrim($_path[$clang->getId()], '/')) {
+                    $id = $_id;
+                    $clangId = $clang->getId();
+                    break;
+                }
+            }
+        }
+        if(!$id) return null;
         $article = \rex_article::get($id);
-        $notFoundId = rex_yrewrite::getCurrentDomain()->getNotfoundId();
-        if ($id != $notFoundId && ($article->isOnline() || rex::getUser())) {
+        if ($article->isOnline() || rex::getUser()) {
+            rex_clang::setCurrentId($clangId);
             return new ContentType('article', rex_clang::getCurrentId(), new ID($id));
         }
         return null;
@@ -69,6 +77,9 @@ class ContentTypeService
     private function checkForArticleRedirect(string $path): ?ContentType
     {
         $path = ltrim($path, '/');
+        if(!$path) {
+            return null;
+        }
         $redirections = rex_yrewrite::$paths['redirections'];
         foreach ($redirections['default'] as $idx => $redirection) {
             if (ltrim($redirection[1]['path'], '/') == $path) {
@@ -99,6 +110,9 @@ class ContentTypeService
     {
         $paths = \rex_yrewrite_forward::$paths;
         $path = trim($path, '/');
+        if(!$path) {
+            return null;
+        }
         foreach ($paths as $_path) {
             if (trim($_path['url'], '/') == $path) {
                 return new ContentType('forward', rex_clang::getCurrentId(), new ID($_path['id']));
