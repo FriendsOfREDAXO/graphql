@@ -43,11 +43,11 @@ class ContentType
     #[Field]
     public function getMetadata(): ?Metadata
     {
+        if(in_array($this->type, ['forward', 'article_redirect'])) {
+            return null;
+        }
         if ('article' === $this->type) {
             return Metadata::getByArticleId($this->elementId->val(), $this->clangId);
-        }
-        if('forward' === $this->type) {
-            return null;
         }
         return Metadata::getByUrlObject();
     }
@@ -60,7 +60,7 @@ class ContentType
     public function getClangs(): array
     {
         $clangs = [];
-        if('forward' === $this->type) {
+        if(in_array($this->type, ['forward', 'article_redirect'])) {
             $clang = Clang::getById($this->clangId);
             $clang->isActive = true;
             return [$clang];

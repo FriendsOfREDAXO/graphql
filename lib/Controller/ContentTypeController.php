@@ -27,8 +27,15 @@ class ContentTypeController
 
     #[Query]
     #[Logged]
-    public function getForward(ID $id): Forward
+    public function getForward(ID $id): ?Forward
     {
         return $this->service->getForward($id->val());
+    }
+
+    #[Query]
+    #[Logged]
+    public function getArticleRedirect(ID $id): ?Forward
+    {
+        return $this->service->getArticleRedirect($id->val());
     }
 }

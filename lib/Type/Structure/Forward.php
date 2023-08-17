@@ -10,21 +10,15 @@ use TheCodingMachine\GraphQLite\Types\ID;
 #[Type]
 class Forward
 {
-    private ID $id;
     private string $url;
     private int $status;
 
-    public function __construct(ID $id, string $url, int $status)
+    public function __construct(string $url, int $status)
     {
-        $this->id = $id;
         $this->url = $url;
         $this->status = $status;
     }
-    #[Field]
-    public function getId(): ID
-    {
-        return $this->id;
-    }
+
     #[Field]
     public function getUrl(): string
     {
@@ -47,7 +41,7 @@ class Forward
             $url = $forward['extern'];
         }
         if($url) {
-            return new Forward(new ID($forward['id']), $url, $forward['movetype']);
+            return new Forward($url, $forward['movetype']);
         }
         return null;
     }

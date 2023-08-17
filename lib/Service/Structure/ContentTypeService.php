@@ -25,17 +25,21 @@ class ContentTypeService
         }
 
         $forwardType = $this->checkForForward($path);
-        if($forwardType) {
+        if ($forwardType) {
             return $forwardType;
+        }
+        $articleRedirectionType = $this->checkForArticleRedirect($path);
+        if ($articleRedirectionType) {
+            return $articleRedirectionType;
         }
 
         $articleType = $this->checkForArticle($path);
-        if($articleType) {
+        if ($articleType) {
             return $articleType;
         }
 
         $urlType = $this->checkForUrlObject($path);
-        if($urlType) {
+        if ($urlType) {
             return $urlType;
         }
 
@@ -50,14 +54,26 @@ class ContentTypeService
             [],
             [],
             rex_yrewrite::$paths['paths'] ?? [],
-            rex_yrewrite::$paths['redirections'] ?? [],
+            [],
         );
         $resolver->resolve($path);
         $id = $structureAddon->getProperty('article_id');
-        $notFoundId = rex_yrewrite::getCurrentDomain()->getNotfoundId();
         $article = \rex_article::get($id);
+        $notFoundId = rex_yrewrite::getCurrentDomain()->getNotfoundId();
         if ($id != $notFoundId && ($article->isOnline() || rex::getUser())) {
             return new ContentType('article', rex_clang::getCurrentId(), new ID($id));
+        }
+        return null;
+    }
+
+    private function checkForArticleRedirect(string $path): ?ContentType
+    {
+        $path = ltrim($path, '/');
+        $redirections = rex_yrewrite::$paths['redirections'];
+        foreach ($redirections['default'] as $idx => $redirection) {
+            if (ltrim($redirection[1]['path'], '/') == $path) {
+                return new ContentType('article_redirect', rex_clang::getCurrentId(), new ID($idx));
+            }
         }
         return null;
     }
@@ -73,7 +89,8 @@ class ContentTypeService
                 if ($urlObject) {
                     return new ContentType($urlObject->getProfile()->getNamespace(), $urlObject->getClangId(), new ID($urlObject->getDatasetId()));
                 }
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
         return null;
     }
@@ -82,8 +99,8 @@ class ContentTypeService
     {
         $paths = \rex_yrewrite_forward::$paths;
         $path = trim($path, '/');
-        foreach($paths as $_path) {
-            if(trim($_path['url'], '/') == $path) {
+        foreach ($paths as $_path) {
+            if (trim($_path['url'], '/') == $path) {
                 return new ContentType('forward', rex_clang::getCurrentId(), new ID($_path['id']));
             }
         }
@@ -92,17 +109,36 @@ class ContentTypeService
 
     private function get404(): ContentType
     {
-        return  new ContentType('article', rex_clang::getCurrentId(), new ID(rex_yrewrite::getCurrentDomain()->getNotfoundId()));
+        return new ContentType('article', rex_clang::getCurrentId(), new ID(rex_yrewrite::getCurrentDomain()->getNotfoundId()));
     }
 
     public function getForward(int $id): ?Forward
     {
         $paths = \rex_yrewrite_forward::$paths;
-        foreach($paths as $_path) {
-            if($_path['id'] == $id) {
+        foreach ($paths as $_path) {
+            if ($_path['id'] == $id) {
                 $forward = Forward::getForwardFromArray($_path);
-                if($forward) {
+                if ($forward) {
                     return $forward;
+                }
+            }
+        }
+        return null;
+    }
+
+    public function getArticleRedirect(int $id): ?Forward
+    {
+        $article = \rex_article::get($id);
+        if($article && ($article->isOnline() || rex::getUser())) {
+            $redirection =  $article->getValue('yrewrite_redirection');
+            if($redirection) {
+                if(is_numeric($redirection)) {
+                    $redirectTo = \rex_article::get($redirection);
+                    if($redirectTo && ($redirectTo->isOnline() || rex::getUser())) {
+                        return new Forward($redirectTo->getUrl(), 301);
+                    }
+                } else {
+                    return new Forward($redirection, 301);
                 }
             }
         }
