@@ -68,6 +68,7 @@ class ContentTypeService
         if(!$id) return null;
         $article = \rex_article::get($id);
         if ($article->isOnline() || rex::getUser()) {
+            rex_addon::get('structure')->setProperty('article_id', $article->getId());
             rex_clang::setCurrentId($clangId);
             return new ContentType('article', rex_clang::getCurrentId(), new ID($id));
         }
