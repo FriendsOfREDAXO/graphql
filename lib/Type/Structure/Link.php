@@ -53,7 +53,7 @@ class Link
         $id = new ID($article->getId());
         $label = $article->getName();
         $url = $article->getUrl();
-        $target = '_self';
+        $target = preg_match('@^http(s)?://@', $article->getUrl()) ? '_blank' : '_self';
         return new Link($id, $label, $url, $target);
     }
 
