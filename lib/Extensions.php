@@ -47,8 +47,8 @@ class Extensions
             $articleId = $ep->getParam('article_id');
             $clang = $ep->getParam('clang');
             $newUrl = rtrim($frontendUrl, '/') . '/' . ltrim(rex_getUrl($articleId, $clang), '/');
-            if($token) {
-                $newUrl .= '?'.AuthService::AUTH_GET_PARAM_KEY .'='.$token;
+            if ($token) {
+                $newUrl .= '?' . AuthService::AUTH_GET_PARAM_KEY . '=' . $token;
             }
             $pattern = '/<li class="pull-right">.*?<a href=".*?" onclick=".*?">.+?<\/a><\/li>/';
             $content = preg_replace_callback($pattern, function ($matches) use ($newUrl) {
@@ -94,13 +94,14 @@ class Extensions
     public static function ext__rewriteArticleUrl(\rex_extension_point $ep)
     {
         $subject = $ep->getSubject();
-        if(preg_match('@^http(s)?://@', $subject)) {
+        $basePath = \rex_yrewrite::getCurrentDomain()?->getPath();
+
+        if (preg_match('@^http(s)?://@', $subject) && !($basePath && preg_match('@^https(s)?://' . preg_quote($basePath, '@') . '@', $subject))) {
             return $subject;
         }
-        if (\rex_yrewrite::getCurrentDomain()) {
-            $baseUrl = \rex_yrewrite::getCurrentDomain()->getUrl();
-            $basePath = \rex_yrewrite::getCurrentDomain()->getPath();
-            $subject = preg_replace('@^' . preg_quote($baseUrl, '@') . '@', '', $subject);
+
+        if ($basePath) {
+            $subject = preg_replace('@^http(s)?://@', '', $subject);
             return '/' . preg_replace('@^' . preg_quote($basePath, '@') . '@', '', $subject);
         }
         return $subject;
@@ -135,12 +136,12 @@ class Extensions
         $token = $jwtService->generateToken();
 
         $url = \rex::getServer();
-        if($token) {
-            $url .= '?'.AuthService::AUTH_GET_PARAM_KEY .'='.$token;
+        if ($token) {
+            $url .= '?' . AuthService::AUTH_GET_PARAM_KEY . '=' . $token;
         }
         \rex_view::setJsProperty(
             'customizer_showlink',
-            '<h1 class="be-style-customizer-title"><a href="'.$url.'" target="_blank" rel="noreferrer noopener"><span class="be-style-customizer-title-name">' . rex_escape(\rex::getServerName()) . '</span><i class="fa fa-external-link"></i></a></h1>',
+            '<h1 class="be-style-customizer-title"><a href="' . $url . '" target="_blank" rel="noreferrer noopener"><span class="be-style-customizer-title-name">' . rex_escape(\rex::getServerName()) . '</span><i class="fa fa-external-link"></i></a></h1>',
         );
     }
 }
