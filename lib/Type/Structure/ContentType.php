@@ -17,12 +17,14 @@ class ContentType
     private ?string $type;
     private ?int $clangId;
     private ?ID $elementId;
+    private ?Article $relatedArticle;
 
-    public function __construct(string $type = null, int $clangId = null, ID $elementId = null)
+    public function __construct(string $type = null, int $clangId = null, ID $elementId = null, Article $relatedArticle = null)
     {
         $this->type = $type;
         $this->clangId = $clangId;
         $this->elementId = $elementId;
+        $this->relatedArticle = $relatedArticle;
     }
 
     #[Field]
@@ -43,7 +45,7 @@ class ContentType
     #[Field]
     public function getMetadata(): ?Metadata
     {
-        if(in_array($this->type, ['forward', 'article_redirect'])) {
+        if (in_array($this->type, ['forward', 'article_redirect'])) {
             return null;
         }
         if ('article' === $this->type) {
@@ -53,14 +55,14 @@ class ContentType
     }
 
     /**
-     * @throws Exception
      * @return Clang[]
+     * @throws Exception
      */
     #[Field]
     public function getClangs(): array
     {
         $clangs = [];
-        if(in_array($this->type, ['forward', 'article_redirect'])) {
+        if (in_array($this->type, ['forward', 'article_redirect'])) {
             $clang = Clang::getById($this->clangId);
             $clang->isActive = true;
             return [$clang];
@@ -68,7 +70,7 @@ class ContentType
         if ('article' === $this->type) {
             foreach (rex_clang::getAll(\rex::getUser() == null) as $_clang) {
                 $article = \rex_article::get($this->elementId->val(), $_clang->getId());
-                if($article && ($article->isOnline() || rex::getUser())) {
+                if ($article && ($article->isOnline() || rex::getUser())) {
                     $clang = Clang::getById($_clang->getId());
                     $clang->url = rex_getUrl($this->elementId->val(), $_clang->getId());
                     $clang->isActive = rex_clang::getCurrentId() === $_clang->getId();
@@ -87,5 +89,11 @@ class ContentType
             }
         }
         return $clangs;
+    }
+
+    #[Field]
+    public function getRelatedArticle(): ?Article
+    {
+        return $this->relatedArticle;
     }
 }

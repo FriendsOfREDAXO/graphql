@@ -2,6 +2,7 @@
 
 namespace GraphQL\Service\Structure;
 
+use RexGraphQL\Type\Structure\Article;
 use RexGraphQL\Type\Structure\ContentType;
 use rex;
 use rex_addon;
@@ -56,21 +57,21 @@ class ContentTypeService
         $id = null;
         $clangId = null;
         $clangs = rex_clang::getAll();
-        foreach($paths as $_id => $_path) {
-            foreach($clangs as $clang) {
-                if($path === rtrim($_path[$clang->getId()], '/')) {
+        foreach ($paths as $_id => $_path) {
+            foreach ($clangs as $clang) {
+                if ($path === rtrim($_path[$clang->getId()], '/')) {
                     $id = $_id;
                     $clangId = $clang->getId();
                     break 2;
                 }
             }
         }
-        if(!$id) return null;
+        if (!$id) return null;
         $article = \rex_article::get($id);
         if ($article->isOnline() || rex::getUser()) {
             rex_addon::get('structure')->setProperty('article_id', $article->getId());
             rex_clang::setCurrentId($clangId);
-            return new ContentType('article', rex_clang::getCurrentId(), new ID($id));
+            return new ContentType('article', rex_clang::getCurrentId(), new ID($id), Article::getById($article->getId()));
         }
         return null;
     }
@@ -78,7 +79,7 @@ class ContentTypeService
     private function checkForArticleRedirect(string $path): ?ContentType
     {
         $path = ltrim($path, '/');
-        if(!$path) {
+        if (!$path) {
             return null;
         }
         $redirections = rex_yrewrite::$paths['redirections'];
@@ -99,7 +100,9 @@ class ContentTypeService
                 $urlObject = UrlManager::resolveUrl(new Url($resolvablePath));
                 rex::setProperty('url_object', $urlObject);
                 if ($urlObject) {
-                    return new ContentType($urlObject->getProfile()->getNamespace(), $urlObject->getClangId(), new ID($urlObject->getDatasetId()));
+                    rex_addon::get('structure')->setProperty('article_id', $urlObject->getArticleId());
+                    rex_clang::setCurrentId($urlObject->getClangId());
+                    return new ContentType($urlObject->getProfile()->getNamespace(), $urlObject->getClangId(), new ID($urlObject->getDatasetId()), Article::getById($urlObject->getArticleId()));
                 }
             } catch (\Exception $e) {
             }
@@ -111,7 +114,7 @@ class ContentTypeService
     {
         $paths = \rex_yrewrite_forward::$paths;
         $path = trim($path, '/');
-        if(!$path) {
+        if (!$path) {
             return null;
         }
         foreach ($paths as $_path) {
@@ -144,12 +147,12 @@ class ContentTypeService
     public function getArticleRedirect(int $id): ?Forward
     {
         $article = \rex_article::get($id);
-        if($article && ($article->isOnline() || rex::getUser())) {
-            $redirection =  $article->getValue('yrewrite_redirection');
-            if($redirection) {
-                if(is_numeric($redirection)) {
+        if ($article && ($article->isOnline() || rex::getUser())) {
+            $redirection = $article->getValue('yrewrite_redirection');
+            if ($redirection) {
+                if (is_numeric($redirection)) {
                     $redirectTo = \rex_article::get($redirection);
-                    if($redirectTo && ($redirectTo->isOnline() || rex::getUser())) {
+                    if ($redirectTo && ($redirectTo->isOnline() || rex::getUser())) {
                         return new Forward($redirectTo->getUrl(), 301);
                     }
                 } else {
