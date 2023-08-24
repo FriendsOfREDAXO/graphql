@@ -2,13 +2,13 @@
 
 namespace GraphQL\Service\Structure;
 
+use rex_exception;
 use RexGraphQL\Type\Structure\Article;
 use RexGraphQL\Type\Structure\ContentType;
 use rex;
 use rex_addon;
 use rex_clang;
 use rex_yrewrite;
-use rex_yrewrite_path_resolver;
 use RexGraphQL\Type\Structure\Forward;
 use TheCodingMachine\GraphQLite\Types\ID;
 use Url\Url;
@@ -16,6 +16,9 @@ use Url\UrlManager;
 
 class ContentTypeService
 {
+    /**
+     * @throws rex_exception
+     */
     public function getContentTypeByPath(string $path): ContentType
     {
         if (!str_starts_with($path, '/')) {
@@ -48,7 +51,7 @@ class ContentTypeService
     }
 
     /**
-     * @throws \rex_exception
+     * @throws rex_exception
      */
     private function checkForArticle(string $path): ?ContentType
     {
@@ -127,7 +130,8 @@ class ContentTypeService
 
     private function get404(): ContentType
     {
-        return new ContentType('article', rex_clang::getCurrentId(), new ID(rex_yrewrite::getCurrentDomain()->getNotfoundId()));
+        $id = rex_yrewrite::getCurrentDomain()->getNotfoundId();
+        return new ContentType('article', rex_clang::getCurrentId(), new ID($id), Article::getById($id));
     }
 
     public function getForward(int $id): ?Forward
