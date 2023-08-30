@@ -15,13 +15,15 @@ class Link
     private string $label;
     private string $url;
     private string $target;
+    private string $type;
 
-    public function __construct(ID $id, string $label, string $url, string $target)
+    public function __construct(ID $id, string $label, string $url, string $target, string $type)
     {
         $this->id = $id;
         $this->label = $label;
         $this->url = $url;
         $this->target = $target;
+        $this->type = $type;
     }
 
     #[Field]
@@ -48,13 +50,21 @@ class Link
         return $this->target;
     }
 
+    #[Field]
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
     public static function getByArticle(rex_article $article): Link
     {
         $id = new ID($article->getId());
         $label = $article->getName();
         $url = $article->getUrl();
-        $target = preg_match('@^http(s)?://@', $article->getUrl()) ? '_blank' : '_self';
-        return new Link($id, $label, $url, $target);
+        $external = preg_match('@^http(s)?://@', $article->getUrl());
+        $target = $external ? '_blank' : '_self';
+        $type = $external ? 'url' : 'article';
+        return new Link($id, $label, $url, $target, $type);
     }
 
 
