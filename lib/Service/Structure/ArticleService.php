@@ -29,7 +29,7 @@ class ArticleService
         }, $articles);
     }
 
-    public function getArticleById(int $id): Article
+    public function getArticleById(int $id): ?Article
     {
         return Article::getById($id);
     }
@@ -37,5 +37,11 @@ class ArticleService
     public function getSiteStartArticle(): Article
     {
         return Article::getByObject(\rex_article::getSiteStartArticle());
+    }
+
+    public function getSelectedArticles(array $ids): array
+    {
+        $articles =  array_map(fn ($id) => Article::getById($id), $ids);
+        return array_filter($articles, fn ($article) => $article !== null);
     }
 }

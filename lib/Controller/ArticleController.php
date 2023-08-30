@@ -33,11 +33,11 @@ class ArticleController
      * Get an article by its id
      *
      * @param ID $id id of the article
-     * @return Article
+     * @return ?Article
      */
     #[Query]
     #[Logged]
-    public function getArticle(ID $id): Article
+    public function getArticle(ID $id): ?Article
     {
         return $this->service->getArticleById($id->val());
     }
@@ -67,4 +67,15 @@ class ArticleController
         return $this->service->getSiteStartArticle();
     }
 
+    /**
+     * Get the start article of the site
+     *
+     * @param ID[] $ids Article ids
+     * @return Article[]
+     */
+    #[Query]
+    #[Logged]
+    public function getSelectedArticles(array $ids): array {
+        return $this->service->getSelectedArticles($ids);
+    }
 }

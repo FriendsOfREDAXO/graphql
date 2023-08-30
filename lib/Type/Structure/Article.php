@@ -103,14 +103,14 @@ class Article
     /**
      * @param int $id id of \rex_article
      *
-     * @return Article proxy object
+     * @return ?Article proxy object
      */
-    public static function getById(int $id): self
+    public static function getById(int $id): ?self
     {
         $a = new self();
         $article = rex_article::get($id);
         if(!$article || (!$article->isOnline() && !\rex::getUser())) {
-            $article = rex_article::getNotfoundArticle();
+            return null;
         }
         $a->article = $article;
         return $a;
@@ -119,13 +119,13 @@ class Article
     /**
      * @param rex_article $obj \rex_article object to encapsulate
      *
-     * @return Article proxy object
+     * @return ?Article proxy object
      */
-    public static function getByObject(rex_article $obj): self
+    public static function getByObject(rex_article $obj): ?self
     {
         $a = new self();
         if(!$obj->isOnline() && !\rex::getUser()) {
-            $obj = rex_article::getNotfoundArticle();
+            return null;
         }
         $a->article = $obj;
         return $a;
