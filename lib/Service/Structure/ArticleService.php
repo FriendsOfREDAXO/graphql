@@ -41,7 +41,7 @@ class ArticleService
 
     public function getSelectedArticles(array $ids): array
     {
-        $articles =  array_map(fn ($id) => Article::getById($id), $ids);
+        $articles =  array_map(fn ($id) => Article::getById($id->val()), $ids);
         return array_filter($articles, fn ($article) => $article !== null);
     }
 }
