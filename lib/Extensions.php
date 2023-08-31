@@ -96,7 +96,7 @@ class Extensions
         $subject = $ep->getSubject();
         $basePath = \rex_yrewrite::getCurrentDomain()?->getPath();
 
-        if (preg_match('@^http(s)?://@', $subject) && !($basePath && preg_match('@^https(s)?://' . preg_quote($basePath, '@') . '@', $subject))) {
+        if (preg_match('@^http(s)?://@', $subject) && !($basePath && preg_match('@^http(s)?://' . preg_quote($basePath, '@') . '@', $subject))) {
             return $subject;
         }
 
