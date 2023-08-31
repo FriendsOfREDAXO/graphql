@@ -1,1 +1,4 @@
 vendor/
+
+# Mac Finder invisible files
+*.DS_Store
