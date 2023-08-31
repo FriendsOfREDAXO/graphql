@@ -14,6 +14,7 @@ use rex_extension;
 use rex_extension_point;
 use rex_response;
 use rex_var;
+use RexGraphQL\Middleware\ValidateFieldMiddleware;
 use Symfony\Component\DependencyInjection\Container;
 use TheCodingMachine\GraphQLite\Context\Context;
 use TheCodingMachine\GraphQLite\Exceptions\WebonyxErrorHandler;
@@ -25,11 +26,13 @@ use function is_array;
 class Endpoint
 {
     private SchemaFactory $schemaFactory;
+    private Container $container;
 
     public function __construct()
     {
+        $this->container = new Container();
         $this->schemaFactory = new SchemaFactory(
-            new ArrayCache(), new Container(),
+            new ArrayCache(), $this->container,
         );
     }
 
@@ -65,6 +68,10 @@ class Endpoint
             $this->schemaFactory->prodMode();
         }
         $this->schemaFactory->setAuthenticationService(new AuthService());
+
+        // field validation
+        $this->schemaFactory->addParameterMiddleware(new ValidateFieldMiddleware($this->container));
+
         return $this->schemaFactory->createSchema();
     }
 
