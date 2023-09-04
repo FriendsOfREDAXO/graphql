@@ -89,6 +89,8 @@ class Endpoint
     {
         $endpoint = new self();
         $result = $endpoint->executeQuery();
+        rex_response::setHeader('Access-Control-Allow-Origin', '*');
+        rex_response::setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         static::sendResponse($result);
     }
 
@@ -97,8 +99,6 @@ class Endpoint
         rex_response::cleanOutputBuffers();
         rex_response::sendCacheControl();
         rex_response::setStatus(rex_response::HTTP_OK);
-        rex_response::setHeader('Access-Control-Allow-Origin', '*');
-        rex_response::setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         $output = json_encode($output);
         $output = rex_extension::registerPoint(new rex_extension_point('GRAPHQL_OUTPUT_FILTER', $output));
         rex_response::sendContent($output, 'application/json');
