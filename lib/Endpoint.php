@@ -88,9 +88,9 @@ class Endpoint
     #[NoReturn] public static function registerEndpoint(): void
     {
         $endpoint = new self();
-        $result = $endpoint->executeQuery();
         rex_response::setHeader('Access-Control-Allow-Origin', '*');
         rex_response::setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        $result = $endpoint->executeQuery();
         static::sendResponse($result);
     }
 
