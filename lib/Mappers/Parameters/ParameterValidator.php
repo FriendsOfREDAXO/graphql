@@ -25,7 +25,7 @@ class ParameterValidator implements InputTypeParameterInterface
     /**
      * The "resolver" returns the actual value that will be fed to the function.
      */
-    public function resolve(?object $source, array $args, $context, ResolveInfo $info)
+    public function resolve(?object $source, array $args, $context, ResolveInfo $info): mixed
     {
         $data = $this->parameter->resolve($source, $args, $context, $info);
         $validatorBuilder = new \Symfony\Component\Validator\ValidatorBuilder();
@@ -46,7 +46,7 @@ class ParameterValidator implements InputTypeParameterInterface
         return $data;
     }
 
-    public function getType(): InputType
+    public function getType(): InputType&\GraphQL\Type\Definition\Type
     {
         return $this->parameter->getType();
     }
