@@ -46,13 +46,22 @@ class Endpoint
 
         $queryComplexityRule = new QueryComplexity(200);
         DocumentValidator::addRule($queryComplexityRule);
+        if(!$input['query']) {
+            return [
+                'errors' => [
+                    [
+                        'message' => 'No query provided',
+                    ],
+                ],
+            ];
+        }
 
         return GraphQL::executeQuery(
             $schema,
             $input['query'],
             null,
             new Context(),
-            $input['variables'] ?? null,
+            $input['variables'],
         )->setErrorFormatter([WebonyxErrorHandler::class, 'errorFormatter'])
             ->setErrorsHandler([WebonyxErrorHandler::class, 'errorHandler'])
             ->toArray(self::isDebug() ? DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE : DebugFlag::NONE);

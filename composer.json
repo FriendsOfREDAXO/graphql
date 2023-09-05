@@ -1,6 +1,6 @@
 {
     "require": {
-        "thecodingmachine/graphqlite": "^6.0",
+        "thecodingmachine/graphqlite": "^6.1",
         "yiisoft/cache": "^1.0",
         "thecodingmachine/graphqlite-symfony-validator-bridge": "6.0.x-dev",
         "symfony/dependency-injection": "^6.1",
