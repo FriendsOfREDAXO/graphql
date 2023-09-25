@@ -16,6 +16,11 @@ use TheCodingMachine\GraphQLite\Types\ID;
 class ArticleSlice
 {
     public rex_article_slice $slice;
+    private ?string $media = null;
+    private ?string $values = null;
+    private ?string $mediaList = null;
+    private ?string $link = null;
+    private ?string $linkList = null;
 
     #[Field]
     public function getId(): ID
@@ -36,14 +41,21 @@ class ArticleSlice
     #[Field]
     public function getValues(): ?string
     {
-        $values = $this->parseValueObjects(function ($i) {
-            return $this->slice->getValueArray($i) ?: $this->slice->getValue($i);
-        });
+        if(!$this->values) {
+            $this->values = $this->parseValueObjects(function ($i) {
+                return $this->slice->getValueArray($i) ?: $this->slice->getValue($i);
+            });
+        }
         return rex_extension::registerPoint(
-            new rex_extension_point('GRAPHQL_SLICE_VALUES', $values, [
+            new rex_extension_point('GRAPHQL_SLICE_VALUES', $this->values, [
                 'slice' => $this->slice,
             ]),
         ) ?: null;
+    }
+
+    public function setValues(?string $values): void
+    {
+        $this->values = $values;
     }
 
     /**
@@ -52,9 +64,17 @@ class ArticleSlice
     #[Field]
     public function getMedia(): ?string
     {
-        return $this->parseValueObjects(function ($i) {
-            return $this->slice->getMedia($i);
-        }, 10);
+        if(!$this->media) {
+            $this->media = $this->parseValueObjects(function ($i) {
+                return $this->slice->getMedia($i);
+            }, 10);
+        }
+        return $this->media;
+    }
+
+    public function setMedia(?string $media): void
+    {
+        $this->media = $media;
     }
 
     /**
@@ -63,9 +83,17 @@ class ArticleSlice
     #[Field]
     public function getMediaList(): ?string
     {
-        return $this->parseValueObjects(function ($i) {
-            return $this->slice->getMediaList($i);
-        }, 10);
+        if(!$this->mediaList) {
+            $this->mediaList = $this->parseValueObjects(function ($i) {
+                return $this->slice->getMediaList($i);
+            }, 10);
+        }
+        return $this->mediaList;
+    }
+
+    public function setMediaList(?string $mediaList): void
+    {
+        $this->mediaList = $mediaList;
     }
 
     /**
@@ -74,9 +102,17 @@ class ArticleSlice
     #[Field]
     public function getLink(): ?string
     {
-        return $this->parseValueObjects(function ($i) {
-            return $this->slice->getLink($i);
-        });
+        if(!$this->link) {
+            $this->link = $this->parseValueObjects(function ($i) {
+                return $this->slice->getLink($i);
+            });
+        }
+        return $this->link;
+    }
+
+    public function setLink(?string $link): void
+    {
+        $this->link = $link;
     }
 
     /**
@@ -85,9 +121,17 @@ class ArticleSlice
     #[Field]
     public function getLinkList(): ?string
     {
-        return $this->parseValueObjects(function ($i) {
-            return $this->slice->getLinkList($i);
-        });
+        if(!$this->linkList) {
+            $this->linkList = $this->parseValueObjects(function ($i) {
+                return $this->slice->getLinkList($i);
+            });
+        }
+        return $this->linkList;
+    }
+
+    public function setLinkList(?string $linkList): void
+    {
+        $this->linkList = $linkList;
     }
 
     #[Field]
