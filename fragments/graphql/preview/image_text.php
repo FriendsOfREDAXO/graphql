@@ -18,7 +18,16 @@ $image = $this->getVar('image');
         $media = rex_media::get($image);
         ?>
         <div class="col-lg-4">
-            <img src="<?= $media->getUrl() ?>"
+            <?php if($media->isImage()): ?>
+                <img src="<?= $media->getUrl() ?>"
+            <?php elseif($media->getExtension() == 'mp4'): ?>
+                <video controls muted>
+                    <source src="<?= $media->getUrl() ?>" type="video/mp4">
+                </video>
+            <?php else: ?>
+                <a href="<?= $media->getUrl() ?>" target="_blank"><?= $media->getTitle() ?></a>
+            <?php endif; ?>
+
         </div>
     <?php endif; ?>
 </div>
