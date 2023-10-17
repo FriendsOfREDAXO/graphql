@@ -94,17 +94,24 @@ class Extensions
     public static function ext__rewriteArticleUrl(\rex_extension_point $ep)
     {
         $subject = $ep->getSubject();
+        if($subject) {
+            $subject = self::sanitizeArticleUrl($subject);
+        }
+        return $subject;
+    }
+
+    public static function sanitizeArticleUrl(string $url) {
         $basePath = \rex_yrewrite::getCurrentDomain()?->getPath();
 
-        if (preg_match('@^http(s)?://@', $subject) && !($basePath && preg_match('@^http(s)?://' . preg_quote($basePath, '@') . '@', $subject))) {
-            return $subject;
+        if (preg_match('@^http(s)?://@', $url) && !($basePath && preg_match('@^http(s)?://' . preg_quote($basePath, '@') . '@', $url))) {
+            return $url;
         }
 
         if ($basePath) {
-            $subject = preg_replace('@^http(s)?://@', '', $subject);
-            return '/' . preg_replace('@^' . preg_quote($basePath, '@') . '@', '', $subject);
+            $url = preg_replace('@^http(s)?://@', '', $url);
+            return '/' . preg_replace('@^' . preg_quote($basePath, '@') . '@', '', $url);
         }
-        return $subject;
+        return $url;
     }
 
     public static function ext__replaceInterLinks(\rex_extension_point $ep)

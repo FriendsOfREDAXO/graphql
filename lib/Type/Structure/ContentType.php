@@ -5,6 +5,7 @@ namespace RexGraphQL\Type\Structure;
 use Exception;
 use rex;
 use rex_clang;
+use RexGraphQL\Extensions;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;
@@ -83,7 +84,11 @@ class ContentType
             $urlObjects = $urlObject->getHreflang(rex_clang::getAllIds(\rex::getUser() == null));
             foreach ($urlObjects as $_urlObject) {
                 $clang = Clang::getById($_urlObject->getClangId());
-                $clang->url = $_urlObject->getUrl()->getPath();
+                $url = $_urlObject->getUrl()->getPath();
+                if($url) {
+                    $url = Extensions::sanitizeArticleUrl($url);
+                }
+                $clang->url = $url;
                 $clang->isActive = rex_clang::getCurrentId() === $_urlObject->getClangId();
                 $clangs[] = $clang;
             }
