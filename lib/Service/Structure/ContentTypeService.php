@@ -55,7 +55,7 @@ class ContentTypeService
      */
     private function checkForArticle(string $path): ?ContentType
     {
-        $paths = rex_yrewrite::$paths['paths']['default'];
+        $paths = rex_yrewrite::$paths['paths']['default'] ?: array_shift(array_values(rex_yrewrite::$paths['paths']));
         $path = trim($path, '/');
         $id = null;
         $clangId = null;
