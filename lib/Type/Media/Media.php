@@ -43,7 +43,7 @@ class Media
     {
         $title = null;
         if (\rex_clang::getCurrentId() !== 1) {
-            $title = $this->media->getValue('med_title_'.\rex_clang::getCurrentId());
+            $title = $this->media->getValue('med_title_' . \rex_clang::getCurrentId());
         }
         if (!$title) {
             $title = $this->media->getTitle() ?: $this->getFilename();
@@ -58,7 +58,7 @@ class Media
             return null;
         }
 
-        if($this->isSVG()) {
+        if ($this->isSVG()) {
             return null;
         }
 
@@ -80,7 +80,7 @@ class Media
     {
         $alt = null;
         if (\rex_clang::getCurrentId() !== 1) {
-            $alt = $this->media->getValue('med_alt_'.\rex_clang::getCurrentId());
+            $alt = $this->media->getValue('med_alt_' . \rex_clang::getCurrentId());
         }
         if (!$alt) {
             $alt = $this->media->getValue('med_alt') ?: $this->getFilename();
@@ -116,6 +116,19 @@ class Media
     {
         return $this->media->getExtension();
     }
+
+    #[Field]
+    public function getSize(): string
+    {
+        return $this->media->getSize();
+    }
+
+    #[Field]
+    public function getFormattedSize(): string
+    {
+        return $this->media->getFormattedSize();
+    }
+
 
     /**
      * @param string $name Name of the media
