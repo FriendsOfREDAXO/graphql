@@ -55,7 +55,7 @@ class ContentTypeService
      */
     private function checkForArticle(string $path): ?ContentType
     {
-        $paths = rex_yrewrite::$paths['paths']['default'];
+        $paths = rex_yrewrite::$paths['paths']['default'] ?: array_shift(array_values(rex_yrewrite::$paths['paths']));
         $path = trim($path, '/');
         $id = null;
         $clangId = null;
@@ -98,9 +98,13 @@ class ContentTypeService
     {
         if (rex_addon::exists('url') && rex_addon::get('url')->isAvailable()) {
             try {
-                $basePath = \rex_yrewrite::getCurrentDomain()->getPath();
-                $resolvablePath = rtrim($basePath, '/') . '/' . ltrim($path, '/');
-                $urlObject = UrlManager::resolveUrl(new Url($resolvablePath));
+                $host = \rex_yrewrite::getCurrentDomain()->getHost();
+                $basePath = rtrim('//'.$host . \rex_yrewrite::getCurrentDomain()->getPath(), '/');
+                $path = ltrim($path, '/');
+                $urlObject = UrlManager::resolveUrl(new Url($basePath . '/' . $path));
+                if(!$urlObject) {
+                    $urlObject = UrlManager::resolveUrl(new Url('/' . $path));
+                }
                 rex::setProperty('url_object', $urlObject);
                 if ($urlObject) {
                     rex_addon::get('structure')->setProperty('article_id', $urlObject->getArticleId());
