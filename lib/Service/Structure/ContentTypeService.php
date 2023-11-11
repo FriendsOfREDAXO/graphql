@@ -125,7 +125,8 @@ class ContentTypeService
             return null;
         }
         foreach ($paths as $_path) {
-            if (trim($_path['url'], '/') == $path) {
+            $url = urldecode($_path['url']);
+            if (trim($url, '/') == $path) {
                 return new ContentType('forward', rex_clang::getCurrentId(), new ID($_path['id']));
             }
         }
