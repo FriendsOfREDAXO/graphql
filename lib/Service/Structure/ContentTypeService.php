@@ -124,6 +124,8 @@ class ContentTypeService
         if (!$path) {
             return null;
         }
+        $path = strtolower($path);
+
         foreach ($paths as $_path) {
             $url = urldecode($_path['url']);
             if (trim($url, '/') == $path) {
