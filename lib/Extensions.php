@@ -23,6 +23,8 @@ class Extensions
             }
         }
         if (\rex::isFrontend()) {
+
+            \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext_initLang']);
             \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext__initGraphQLEndpoint'], \rex_extension::LATE);
             Connector::init();
 
@@ -34,6 +36,27 @@ class Extensions
         }
     }
 
+    public static function ext_initLang(): void
+    {
+        /**
+         * WORKAROUND:
+         * We need to set the current language in this exact moment.
+         * If we call it to late, \Kreatif\Settings::init will be called before we set the correct current language id.
+         * and therefore the project settings placeholders and wildcards will be replaced with the wrong language values.
+         * If we call this ep to early, then yrewrite boot.php will override our current language id.
+         * So the right order is:
+         * 1. yrewrite boot.php -> sets current language id
+         * 2. our ep -> sets current language id
+         * 3. Kreatif\Settings::init
+         * 4. ext_initGraphQLEndpoint
+         */
+        if (rex_request('graphql-api', 'string', null) !== null) {
+            $clangId = rex_request('clang-id', 'int', null);
+            if ($clangId) {
+                \rex_clang::setCurrentId($clangId);
+            }
+        }
+    }
     public static function ext__interceptBackendArticleLink(\rex_extension_point $ep)
     {
         $content = $ep->getSubject();
