@@ -4,6 +4,7 @@ namespace RexGraphQL;
 
 use GraphQL\Service\Auth\AuthService;
 use GraphQL\Service\Auth\JwtService;
+use rex_article;
 use RexGraphQL\Connector\Connector;
 use RexGraphQL\RexGraphQL;
 
@@ -68,6 +69,11 @@ class Extensions
             $token = $jwtService->generateToken();
 
             $articleId = $ep->getParam('article_id');
+            $article = rex_article::get($articleId);
+            if (!$article) {
+                return $content;
+            }
+
             $clang = $ep->getParam('clang');
             $newUrl = rtrim($frontendUrl, '/') . '/' . ltrim(rex_getUrl($articleId, $clang), '/');
             if ($token) {
