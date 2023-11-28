@@ -2,6 +2,10 @@
 
 namespace RexGraphQL\Type\Navigation;
 
+use GraphQL\Service\Media\MediaService;
+use rex_article;
+use rex_yrewrite_seo;
+use RexGraphQL\Type\Media\Media;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Types\ID;
@@ -80,15 +84,15 @@ class NavigationItem
 
     public static function getByArticleId(int $id, int $currentId): ?self
     {
-        $article = \rex_article::get($id);
+        $article = rex_article::get($id);
 
-        if ($article instanceof \rex_article) {
+        if ($article instanceof rex_article) {
             return static::getByArticle($article, $currentId);
         }
         throw new \Exception("Article with id $id not found");
     }
 
-    public static function getByArticle(\rex_article $article, ?int $currentId): ?self
+    public static function getByArticle(rex_article $article, ?int $currentId): ?self
     {
         $id = $article->getId();
         $label = $article->getName();
@@ -116,7 +120,7 @@ class NavigationItem
         $parentId = $category->getParentId() ?: null;
         $active = false;
         if($currentId) {
-            $currentArticle = \rex_article::get($currentId);
+            $currentArticle = rex_article::get($currentId);
             $path = explode('|', $currentArticle->getPath());
             $active = in_array($id, $path);
         }
@@ -129,4 +133,25 @@ class NavigationItem
         );
     }
 
+
+    /**
+     * @param string $mediaType
+     * @return ?Media
+     */
+    #[Field]
+    public function getSeoImage(string $mediaType): ?Media
+    {
+        $article = rex_article::get($this->getId()->val());
+        if (!$article) {
+            return null;
+        }
+
+        $seo = new rex_yrewrite_seo($article->getId(), null);
+        $image = $seo->getImage();
+        if (!$image) {
+            return null;
+        }
+        $service = new MediaService();
+        return $service->getMediaByName($image, $mediaType);
+    }
 }
