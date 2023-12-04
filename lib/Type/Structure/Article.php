@@ -3,8 +3,11 @@
 namespace RexGraphQL\Type\Structure;
 
 use DateTimeInterface;
+use GraphQL\Service\Media\MediaService;
 use rex_article;
 use rex_article_slice;
+use rex_yrewrite_seo;
+use RexGraphQL\Type\Media\Media;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;
@@ -86,6 +89,22 @@ class Article
         return array_map(static function ($slice) {
             return ArticleSlice::getByObject($slice);
         }, $slices);
+    }
+
+    /**
+     * @param string $mediaType
+     * @return ?Media
+     */
+    #[Field]
+    public function getSeoImage(string $mediaType): ?Media
+    {
+        $seo = new rex_yrewrite_seo($this->article->getId(), null);
+        $image = $seo->getImage();
+        if (!$image) {
+            return null;
+        }
+        $service = new MediaService();
+        return $service->getMediaByName($image, $mediaType);
     }
 
     #[Field]
