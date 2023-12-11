@@ -79,8 +79,8 @@ class Article
     }
 
     /**
-     * @throws GraphQLException if some slices are not online
      * @return ArticleSlice[]
+     * @throws GraphQLException if some slices are not online
      */
     #[Field]
     public function getSlices(): array
@@ -128,7 +128,7 @@ class Article
     {
         $a = new self();
         $article = rex_article::get($id);
-        if(!$article || (!$article->isOnline() && !\rex::getUser())) {
+        if (!$article || (!$article->isOnline() && !\rex::getUser())) {
             return null;
         }
         $a->article = $article;
@@ -143,10 +143,20 @@ class Article
     public static function getByObject(rex_article $obj): ?self
     {
         $a = new self();
-        if(!$obj->isOnline() && !\rex::getUser()) {
+        if (!$obj->isOnline() && !\rex::getUser()) {
             return null;
         }
         $a->article = $obj;
         return $a;
+    }
+
+    #[Field]
+    public function getTemplate(): ?Template
+    {
+        $templateId = $this->article->getTemplateId();
+        if ($templateId) {
+            return Template::getById($templateId);
+        }
+        return null;
     }
 }
