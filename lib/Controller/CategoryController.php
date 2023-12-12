@@ -6,6 +6,7 @@ use RexGraphQL\Type\Structure\Category;
 use GraphQL\Service\Structure\CategoryService;
 use TheCodingMachine\GraphQLite\Annotations\Logged;
 use TheCodingMachine\GraphQLite\Annotations\Query;
+use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;
 
 class CategoryController
 {
@@ -20,6 +21,7 @@ class CategoryController
      * Get all categories in the root category
      *
      * @return Category[]
+     * @throws GraphQLException
      */
     #[Query]
     #[Logged]
@@ -27,5 +29,4 @@ class CategoryController
     {
         return $this->service->getRootCategories();
     }
-
 }
