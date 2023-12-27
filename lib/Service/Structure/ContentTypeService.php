@@ -98,8 +98,7 @@ class ContentTypeService
     {
         if (rex_addon::exists('url') && rex_addon::get('url')->isAvailable()) {
             try {
-                $host = \rex_yrewrite::getCurrentDomain()->getHost();
-                $basePath = rtrim('//'.$host . \rex_yrewrite::getCurrentDomain()->getPath(), '/');
+                $basePath = rtrim('//'. \rex_yrewrite::getCurrentDomain()->getPath(), '/');
                 $path = ltrim($path, '/');
                 $urlObject = UrlManager::resolveUrl(new Url($basePath . '/' . $path));
                 if(!$urlObject) {
