@@ -159,4 +159,14 @@ class Article
         }
         return null;
     }
+
+    #[Field]
+    public function getTemplateKey(): ?string
+    {
+        $templateId = $this->article->getTemplateId();
+        if ($templateId) {
+            return Template::getById($templateId)?->getKey();
+        }
+        return null;
+    }
 }
