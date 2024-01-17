@@ -88,6 +88,10 @@ class Endpoint
     {
         $rawInput = file_get_contents('php://input');
         $value = rex_var::toArray($rawInput);
+        $operations = rex_request('operations', 'string');
+        if ($operations) {
+            return json_decode($operations, true);
+        }
         if (is_array($value)) {
             return $value;
         }
