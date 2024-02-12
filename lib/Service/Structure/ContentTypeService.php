@@ -98,12 +98,7 @@ class ContentTypeService
     {
         if (rex_addon::exists('url') && rex_addon::get('url')->isAvailable()) {
             try {
-                $basePath = rtrim('//'. \rex_yrewrite::getCurrentDomain()->getPath(), '/');
-                $path = ltrim($path, '/');
-                $urlObject = UrlManager::resolveUrl(new Url($basePath . '/' . $path));
-                if(!$urlObject) {
-                    $urlObject = UrlManager::resolveUrl(new Url('/' . $path));
-                }
+                $urlObject = $this->getUrlObject($path);
                 rex::setProperty('url_object', $urlObject);
                 if ($urlObject) {
                     rex_addon::get('structure')->setProperty('article_id', $urlObject->getArticleId());
@@ -115,6 +110,32 @@ class ContentTypeService
         }
         return null;
     }
+
+    /**
+     * @param string $path
+     * @return UrlManager|null
+     * @throws \rex_sql_exception
+     */
+    private function getUrlObject(string $path): ?UrlManager
+    {
+        // TODO BAD CODE - REFACTOR
+        $host = \rex_yrewrite::getCurrentDomain()->getHost();
+        $basePath = rtrim('//'.$host . \rex_yrewrite::getCurrentDomain()->getPath(), '/');
+        $path = ltrim($path, '/');
+        $urlObject = UrlManager::resolveUrl(new Url($basePath . '/' . $path));
+        if($urlObject) {
+            return $urlObject;
+        }
+        $basePath = rtrim('//'. \rex_yrewrite::getCurrentDomain()->getPath(), '/');
+        $path = ltrim($path, '/');
+        $urlObject = UrlManager::resolveUrl(new Url($basePath . '/' . $path));
+        if($urlObject) {
+            return $urlObject;
+        }else{
+            return UrlManager::resolveUrl(new Url('/' . $path));
+        }
+    }
+
 
     private function checkForForward(string $path): ?ContentType
     {
