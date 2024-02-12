@@ -6,6 +6,7 @@ use GraphQL\Service\Media\MediaService;
 use rex_article;
 use rex_yrewrite_seo;
 use RexGraphQL\Type\Media\Media;
+use RexGraphQL\Type\Structure\Article;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Types\ID;
@@ -81,6 +82,16 @@ class NavigationItem
     {
         return $this->internal;
     }
+
+    /**
+     * @return Article|null
+     */
+    #[Field]
+    public function getArticle(): ?Article
+    {
+        return Article::getById($this->id);
+    }
+
 
     public static function getByArticleId(int $id, int $currentId): ?self
     {
