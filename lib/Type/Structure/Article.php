@@ -4,7 +4,6 @@ namespace RexGraphQL\Type\Structure;
 
 use DateTimeInterface;
 use GraphQL\Service\Media\MediaService;
-use MFormHelpers\MForm;
 use rex_article;
 use rex_article_slice;
 use rex_yrewrite_seo;
