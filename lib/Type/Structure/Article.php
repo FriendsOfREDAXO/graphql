@@ -4,6 +4,7 @@ namespace RexGraphQL\Type\Structure;
 
 use DateTimeInterface;
 use GraphQL\Service\Media\MediaService;
+use MFormHelpers\MForm;
 use rex_article;
 use rex_article_slice;
 use rex_yrewrite_seo;
@@ -76,6 +77,52 @@ class Article
     public function getMetadata(): Metadata
     {
         return Metadata::getByArticleId($this->getId()->val(), $this->getClang()->getId()->val());
+    }
+
+    /**
+     * @return ArticleAnchors[]|null
+     */
+    #[Field]
+    public function getModulesAnchor(): ?array
+    {
+        $slices = $this->getSlices();
+        if ($slices) {
+            $module_anchors = array_map(function($slice) {
+                $articleId = $this->article->getId();
+                $sliceId = $slice->getId();
+                $customLinkValue = "{$articleId}.{$sliceId}";
+                $anchorTitle = '';
+                $value10 = $slice->slice->getValue(10);
+                if ($value10 && str_starts_with(trim($value10), '{')) {
+                    $value10 = json_decode($value10);
+                    if (isset($value10->anchor_title) && strlen($value10->anchor_title) > 0) {
+                        $anchorTitle = $value10->anchor_title;
+                    } else {
+                        return null;
+                    }
+                }
+                $linkItem =  \Kreatif\Link::parseCustomLinkValue($customLinkValue, $anchorTitle);
+                $linkItem->setAttribute('linkCode', $customLinkValue);
+                return $linkItem;
+            }, $slices);
+            $module_anchors = array_filter($module_anchors, fn($value) => !is_null($value));
+        } else {
+            $module_anchors = [];
+        }
+        $links = [];
+        foreach ($module_anchors as $module_anchor) {
+            $aa = new ArticleAnchors(
+                $module_anchor->getHref(),
+                $module_anchor->getLabel(),
+                $module_anchor->getTarget(),
+               $module_anchor->getType(),
+                [
+                    'linkCode' => $module_anchor->getAttribute('linkCode')
+                ]
+            );
+            $links[] = $aa;
+        }
+        return $links;
     }
 
     /**
