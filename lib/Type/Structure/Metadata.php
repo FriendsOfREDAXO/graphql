@@ -111,13 +111,15 @@ class Metadata
         }
         $seo = new rex_yrewrite_seo($article->getId(), $clangId);
         $robots = 'noindex, nofollow';
-        $index = $article->getValue(
-            rex_yrewrite_seo::$meta_index_field,
-        ) ?? rex_yrewrite_seo::$index_setting_default;
-        if (1 == $index || (0 == $index && $article->isOnline())) {
-            $robots = 'index, follow';
-        } elseif (2 == $index) {
-            $robots = 'noindex, follow';
+        if(!rex::isDebugMode()) {
+            $index = $article->getValue(
+                rex_yrewrite_seo::$meta_index_field,
+            ) ?? rex_yrewrite_seo::$index_setting_default;
+            if (1 == $index || (0 == $index && $article->isOnline())) {
+                $robots = 'index, follow';
+            } elseif (2 == $index) {
+                $robots = 'noindex, follow';
+            }
         }
         $item = new self(
             $seo->getTitle(),
@@ -158,7 +160,7 @@ class Metadata
         $item = new self(
             $title,
             $urlObject->getSeoDescription(),
-            'index, follow',
+            rex::isDebugMode() ? 'noindex, nofollow' : 'index, follow',
             '',
             $image,
             $createdAt,
