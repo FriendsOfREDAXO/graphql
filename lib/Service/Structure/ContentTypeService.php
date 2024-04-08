@@ -86,9 +86,11 @@ class ContentTypeService
             return null;
         }
         $redirections = rex_yrewrite::$paths['redirections'];
-        foreach ($redirections['default'] as $idx => $redirection) {
-            if (ltrim($redirection[1]['path'], '/') == $path) {
-                return new ContentType('article_redirect', rex_clang::getCurrentId(), new ID($idx));
+        if (isset($redirections['default'])) {
+            foreach ($redirections['default'] as $idx => $redirection) {
+                if (ltrim($redirection[1]['path'], '/') == $path) {
+                    return new ContentType('article_redirect', rex_clang::getCurrentId(), new ID($idx));
+                }
             }
         }
         return null;
