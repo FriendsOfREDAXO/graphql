@@ -16,7 +16,7 @@ $image = $this->getVar('image');
     <?php if ($image): ?>
         <?php
         $media = rex_media::get($image);
-        if ($image): ?>
+        if ($media): ?>
             <div class="col-lg-4">
                 <?php if($media->isImage()): ?>
                     <img src="<?= $media->getUrl() ?>"
