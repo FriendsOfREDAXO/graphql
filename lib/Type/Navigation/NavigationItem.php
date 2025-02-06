@@ -114,7 +114,12 @@ class NavigationItem
             $parentId = $article->getParentId() ?: null;
         }
         $active = $currentId && $id === $currentId;
-        $self = new self($id, $label, $url, $parentId, $active, true);
+        $isInternal = true;
+        $yrewrite_url_type = $article->getValue('yrewrite_url_type');
+        if ($yrewrite_url_type === 'extern' || $yrewrite_url_type === 'REDIRECTION_EXTERNAL') {
+            $isInternal = false;
+        }
+        $self = new self($id, $label, $url, $parentId, $active, $isInternal);
         return \rex_extension::registerPoint(
             new \rex_extension_point('GRAPHQL_PARSE_ARTICLE_NAVIGATION_ITEM', $self, [
                 'article' => $article,
@@ -135,7 +140,13 @@ class NavigationItem
             $path = explode('|', $currentArticle->getPath());
             $active = in_array($id, $path);
         }
-        $self = new self($id, $label, $url, $parentId, $active, true);
+
+        $isInternal = true;
+        $yrewrite_url_type = $category->getValue('yrewrite_url_type');
+        if ($yrewrite_url_type === 'extern' || $yrewrite_url_type === 'REDIRECTION_EXTERNAL') {
+            $isInternal = false;
+        }
+        $self = new self($id, $label, $url, $parentId, $active, $isInternal);
         return \rex_extension::registerPoint(
             new \rex_extension_point('GRAPHQL_PARSE_CATEGORY_NAVIGATION_ITEM', $self, [
                 'category' => $category,
