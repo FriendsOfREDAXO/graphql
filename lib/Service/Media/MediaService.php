@@ -6,9 +6,13 @@ use RexGraphQL\Type\Media\Media;
 
 class MediaService
 {
-    public function getMediaByName(string $name, string $mediaType): Media
+    public function getMediaByName(string $name, string $mediaType): ?Media
     {
-        return Media::getByName($name, $mediaType);
+        try {
+            return Media::getByName($name, $mediaType);
+        } catch (\Exception|\Throwable $e) {
+            return null;
+        }
     }
 }
 
