@@ -72,7 +72,11 @@ class Metadata
         if (!$this->image) {
             return null;
         }
-        return Media::getByName($this->image, 'yrewrite_seo_image');
+        try {
+            return Media::getByName($this->image, 'yrewrite_seo_image');
+        } catch (Exception|\Throwable $e) {
+            return null;
+        }
     }
 
     /**
