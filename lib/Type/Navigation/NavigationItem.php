@@ -36,7 +36,7 @@ class NavigationItem
     {
         $active = false;
         if ($item['type'] === 'intern') {
-            $navItem = static::getByArticleId($item['id'], $articleId);
+            $navItem = static::getByArticleId($item['id'], $articleId, false);
             $url = $navItem->getUrl();
             $active = $navItem->isActive();
             $id = $item['id'];
@@ -93,17 +93,17 @@ class NavigationItem
     }
 
 
-    public static function getByArticleId(int $id, int $currentId): ?self
+    public static function getByArticleId(int $id, int $currentId, bool $verifyVisibility = true): ?self
     {
         $article = rex_article::get($id);
 
         if ($article instanceof rex_article) {
-            return static::getByArticle($article, $currentId);
+            return static::getByArticle($article, $currentId, $verifyVisibility);
         }
         throw new \Exception("Article with id $id not found");
     }
 
-    public static function getByArticle(rex_article $article, ?int $currentId): ?self
+    public static function getByArticle(rex_article $article, ?int $currentId, bool $verifyVisibility = true): ?self
     {
         $id = $article->getId();
         $label = $article->getName();
@@ -124,6 +124,7 @@ class NavigationItem
             new \rex_extension_point('GRAPHQL_PARSE_ARTICLE_NAVIGATION_ITEM', $self, [
                 'article' => $article,
                 'currentId' => $currentId,
+                'verifyVisibility' => $verifyVisibility,
             ])
         );
     }
