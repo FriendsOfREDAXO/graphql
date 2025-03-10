@@ -4,6 +4,8 @@ namespace RexGraphQL\Type\Structure;
 
 use DateTimeInterface;
 use Exception;
+use Kreatif\Model;
+use Kreatif\Utils;
 use RexGraphQL\Type\Media\Media;
 use rex;
 use rex_article;
@@ -15,6 +17,7 @@ use TheCodingMachine\GraphQLite\Annotations\Type;
 use TheCodingMachine\GraphQLite\Exceptions\GraphQLException;
 use Url\UrlManager;
 
+
 #[Type]
 class Metadata
 {
@@ -24,19 +27,26 @@ class Metadata
     private ?string $canonical;
     private ?string $image;
 
-    private ?int $createdAt;
-    private ?int $updatedAt;
+    private ?int   $createdAt;
+    private ?int   $updatedAt;
     public ?string $type = 'article';
 
-    public function __construct(string $title = null, string $description = null, string $robots = null, string $canonical = null, string $image = null, ?int $createdAt = null, ?int $updatedAt = null)
-    {
-        $this->title = $title;
+    public function __construct(
+        string $title = null,
+        string $description = null,
+        string $robots = null,
+        string $canonical = null,
+        string $image = null,
+        ?int $createdAt = null,
+        ?int $updatedAt = null
+    ) {
+        $this->title       = $title;
         $this->description = $description;
-        $this->robots = $robots;
-        $this->canonical = $canonical;
-        $this->image = $image;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
+        $this->robots      = $robots;
+        $this->canonical   = $canonical;
+        $this->image       = $image;
+        $this->createdAt   = $createdAt;
+        $this->updatedAt   = $updatedAt;
     }
 
     #[Field]
@@ -48,7 +58,15 @@ class Metadata
     #[Field]
     public function getDescription(): string
     {
-        return $this->description;
+        // shorten the description to 160 characters
+        return Utils::cropText($this->description, 160);
+    }
+
+    #[Field]
+    public function getPreviewText(int $wordCount = 200, string $suffix = '...', string $allowedTags = '<p><strong>'): string
+    {
+        // crop description to $wordCount words and close open tags
+        return Utils::cropText($this->description, $wordCount, $suffix, $allowedTags);
     }
 
     #[Field]
@@ -113,11 +131,9 @@ class Metadata
         if (!$article) {
             throw new GraphQLException('Article not found');
         }
-        $seo = new rex_yrewrite_seo($article->getId(), $clangId);
+        $seo    = new rex_yrewrite_seo($article->getId(), $clangId);
         $robots = 'noindex, nofollow';
-        $index = $article->getValue(
-            rex_yrewrite_seo::$meta_index_field,
-        ) ?? rex_yrewrite_seo::$index_setting_default;
+        $index  = $article->getValue(rex_yrewrite_seo::$meta_index_field,) ?? rex_yrewrite_seo::$index_setting_default;
         if (1 == $index || (0 == $index && $article->isOnline())) {
             $robots = 'index, follow';
         } elseif (2 == $index) {
@@ -139,16 +155,20 @@ class Metadata
     /**
      * @throws GraphQLException|rex_exception if the url object is not found
      */
-    public static function getByUrlObject(): self
+    public static function getByUrlObject($modelObject = null): ?self
     {
-        /** @var UrlManager $urlObject */
-        $urlObject = rex::getProperty('url_object');
+        if ($modelObject && $modelObject instanceof Model) {
+            $urlObject = $modelObject->getUrlObject();
+        } else {
+            /** @var UrlManager $urlObject */
+            $urlObject = rex::getProperty('url_object');
+        }
         if (!$urlObject) {
-            throw new GraphQLException('Url object not found');
+            return null;
         }
         $createdAt = strtotime($urlObject->getValue('createdate'));
         $updatedAt = strtotime($urlObject->getValue('updatedate'));
-        $title = htmlspecialchars_decode(trim(rex_yrewrite::getCurrentDomain()->getTitle()));
+        $title     = htmlspecialchars_decode(trim(rex_yrewrite::getCurrentDomain()->getTitle()));
         if ('' == $title) {
             $title = rex_yrewrite_seo::$title_scheme_default;
         }
@@ -156,18 +176,10 @@ class Metadata
         $title = str_replace('%SN', rex::getServerName(), $title);
 
         $image = $urlObject->getSeoImage();
-        if($image) {
+        if ($image) {
             $image = explode(',', $image)[0];
         }
-        $item = new self(
-            $title,
-            $urlObject->getSeoDescription(),
-            'index, follow',
-            '',
-            $image,
-            $createdAt,
-            $updatedAt,
-        );
+        $item       = new self($title, $urlObject->getSeoDescription(), 'index, follow', '', $image, $createdAt, $updatedAt,);
         $item->type = $urlObject->getProfile()->getNamespace();
         return $item;
     }

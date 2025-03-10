@@ -1,6 +1,6 @@
 package: graphql
 author: Friends Of REDAXO
-version: '0.0.1'
+version: '1.0.0'
 
 page:
     title: GraphQL
