@@ -83,12 +83,18 @@ class Article
      * @throws GraphQLException if some slices are not online
      */
     #[Field]
-    public function getSlices(): array
+    public function getSlices(int $ctypeId = null): array
     {
+        $result = [];
         $slices = rex_article_slice::getSlicesForArticle($this->article->getId(), false, 0, \rex::getUser() == null);
-        return array_map(static function ($slice) {
-            return ArticleSlice::getByObject($slice);
-        }, $slices);
+
+        foreach ($slices as $slice) {
+            if ($ctypeId && $slice->getCtype() !== $ctypeId) {
+                continue;
+            }
+            $result[] = ArticleSlice::getByObject($slice);
+        }
+        return $result;
     }
 
     /**
