@@ -35,6 +35,12 @@ class ArticleSlice
         return $module->getKey() ?: null;
     }
 
+    #[Field]
+    public function getCtypeId(): ?int
+    {
+        return $this->slice->getCtype();
+    }
+
     /**
      * Values as JSON-Object.
      */
