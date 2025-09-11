@@ -62,7 +62,7 @@ class ContentTypeService
         $clangs = rex_clang::getAll();
         foreach ($paths as $_id => $_path) {
             foreach ($clangs as $clang) {
-                if ($path === rtrim($_path[$clang->getId()], '/')) {
+                if (isset($_path[$clang->getId()]) && $path === rtrim($_path[$clang->getId()], '/')) {
                     $id = $_id;
                     $clangId = $clang->getId();
                     break 2;
