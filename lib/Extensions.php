@@ -23,7 +23,6 @@ class Extensions
             }
         }
         if (\rex::isFrontend()) {
-
             \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext_initLang']);
             \rex_extension::register('PACKAGES_INCLUDED', [self::class, 'ext__initGraphQLEndpoint'], \rex_extension::LATE);
             Connector::init();
@@ -89,6 +88,8 @@ class Extensions
     public static function ext__initGraphQLEndpoint(): void
     {
         if (rex_request('graphql-api', 'string', null) !== null) {
+            error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_WARNING);
+
             $clangId = rex_request('clang-id', 'int', null);
             if ($clangId) {
                 \rex_clang::setCurrentId($clangId);
@@ -151,12 +152,18 @@ class Extensions
 
     public static function ext__createModulePreview(\rex_extension_point $ep): string
     {
+        $original_error_level = error_reporting();
+        error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_WARNING);
+
         $sliceId = $ep->getParam('slice_id');
         $clangId = $ep->getParam('clang');
         $fragment = new \rex_fragment();
         $fragment->setVar('slice_id', $sliceId);
         $fragment->setVar('clang_id', $clangId);
         $preview = $fragment->parse('graphql/headless_module_preview.php');
+
+        error_reporting($original_error_level);
+
         return preg_replace('@</header>\s*</div>@', '</header>' . $preview . '</div>', $ep->getSubject());
     }
 

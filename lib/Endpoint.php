@@ -46,7 +46,7 @@ class Endpoint
 
         $queryComplexityRule = new QueryComplexity(200);
         DocumentValidator::addRule($queryComplexityRule);
-        if(!$input['query']) {
+        if (!$input['query']) {
             return [
                 'errors' => [
                     [
@@ -56,7 +56,7 @@ class Endpoint
             ];
         }
 
-        return GraphQL::executeQuery(
+        $result = GraphQL::executeQuery(
             $schema,
             $input['query'],
             null,
@@ -65,6 +65,24 @@ class Endpoint
         )->setErrorFormatter([WebonyxErrorHandler::class, 'errorFormatter'])
             ->setErrorsHandler([WebonyxErrorHandler::class, 'errorHandler'])
             ->toArray(self::isDebug() ? DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE : DebugFlag::NONE);
+
+        if (isset($result['errors'])) {
+            foreach ($result['errors'] as $error) {
+                $msg = $error['extensions']['debugMessage'] ?? $error['message'];
+                $file = $error['extensions']['file'] ?? '';
+                $line = $error['extensions']['line'] ?? 0;
+
+                if (isset($error['path'])) {
+                    $msg .= "\n (path: " . implode('->', $error['path']) . ')';
+                }
+                foreach ($error['extensions']['trace'] ?? [] as $trace) {
+                    $msg .= "\n" . ($trace['file'] ?? '') . ':' . ($trace['line'] ?? '') . ' ' . ($trace['call'] ?? '');
+                }
+                \rex_logger::logError(1, $msg, $file, $line);
+            }
+        }
+
+        return $result;
     }
 
     private function generateSchema(): Schema
